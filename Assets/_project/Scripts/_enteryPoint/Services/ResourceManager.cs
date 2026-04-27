@@ -13,20 +13,26 @@ public class ResourceManager : MonoBehaviour, IService
         foreach (ResourceType type in Enum.GetValues(typeof(ResourceType)))
             Resources[type] = 0;
 
-        Resources[ResourceType.Food] = 30;
-        Resources[ResourceType.Gold] = 50;
-        Resources[ResourceType.Blood] = 30;
+        Resources[ResourceType.Food] = 3000;
+        Resources[ResourceType.Gold] = 5000;
+        Resources[ResourceType.Blood] = 3000;
     }
 
     public void AddResource(ResourceType type, int amount)
     {
-        //if (amount < 0) throw new ArgumentOutOfRangeException("Отрицалово");
-        
-        // if (amount > 0)
-        //     LogSystem.Instance.LogResourceGain(type, amount);
-        
+        if (amount < 0) throw new ArgumentOutOfRangeException("Отрицалово");
+
         Resources[type] += amount;
         OnResourceChanged?.Invoke(type);
+    }
+
+    public void RemoveResource(ResourceType type, int amount)
+    {
+        if (amount > 0)
+        {
+            Resources[type] -= amount;
+            OnResourceChanged?.Invoke(type);
+        }
     }
 
     public bool SpendResource(ResourceCost[] costs)
@@ -48,15 +54,4 @@ public class ResourceManager : MonoBehaviour, IService
 
     public int GetResource(ResourceType type) =>
         Resources[type];
-
-    public bool HasEnoughResources(ResourceCost[] costs)
-    {
-        foreach (var cost in costs)
-        {
-            if (GetResource(cost.Type) < cost.Amount)
-                return false;
-        }
-        
-        return true;
-    }
 }

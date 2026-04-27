@@ -67303,6 +67303,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Totem
       objectReference: {fileID: 0}
+    - target: {fileID: 7222564752974079535, guid: 7ecab419c853ee24e9119ed70b056b74, type: 3}
+      propertyPath: FavorDecayRate
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -67452,6 +67456,10 @@ PrefabInstance:
       propertyPath: Totem
       value: 
       objectReference: {fileID: 805836343}
+    - target: {fileID: 6560660134961846148, guid: 6b30015965d714b4380a5ed51d243853, type: 3}
+      propertyPath: BaseGatherTime
+      value: 1.3
+      objectReference: {fileID: 0}
     - target: {fileID: 6560660134961846148, guid: 6b30015965d714b4380a5ed51d243853, type: 3}
       propertyPath: BaseGatherPerSecond
       value: 1

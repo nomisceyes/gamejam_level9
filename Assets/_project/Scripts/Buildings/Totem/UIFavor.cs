@@ -19,7 +19,7 @@ public class UIFavor : MonoBehaviour
         FavorSlider.SetValueWithoutNotify(Totem.CurrentFavor);
     }
 
-    public void UpdateAmount()
+    private void UpdateAmount()
     {
         if(_coroutine != null)
             StopCoroutine(_coroutine);

@@ -14,7 +14,7 @@ public class Game : MonoBehaviour
     {
         if (Totem == null)
             Totem = FindFirstObjectByType<Totem>();
-        
+
         G.AudioManager.PlayMusic(R.Audio.BackgroundMusic);
     }
 
@@ -30,13 +30,13 @@ public class Game : MonoBehaviour
         {
             LogSystem.Instance.LogGameEnd(false);
             Debug.Log("Вы пребали");
+            _isStop = true;
         }
         else if (Totem.CurrentFavor >= Totem.MinFavorForWin && Health.Instance.CurrentHealth > 0)
         {
             LogSystem.Instance.LogGameEnd(true);
             Debug.Log("Вы победили");
+            _isStop = true;
         }
-        
-        _isStop = true;
     }
 }

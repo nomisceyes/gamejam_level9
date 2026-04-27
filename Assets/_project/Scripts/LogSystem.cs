@@ -56,7 +56,7 @@ public class LogSystem : MonoBehaviour
         StartCoroutine(AutoScroll());
     }
     
-    public void LogSacrifice(string resourceName, int favorChange)
+    public void LogSacrifice(string resourceName, float favorChange)
     {
         if (favorChange > 0)
         {
@@ -107,9 +107,9 @@ public class LogSystem : MonoBehaviour
         // AddLog($"Получено +{amount} {type}", _positiveColor, icon);
     // }
     
-    public void LogFavorChange(int oldFavor, int newFavor)
+    public void LogFavorChange(float oldFavor, float newFavor)
     {
-        int delta = newFavor - oldFavor;
+        float delta = newFavor - oldFavor;
         if (delta > 0)
             AddLog($"Благосклонность тотема повысилась до {newFavor} (+{delta})", _positiveColor, "📈");
         else if (delta < 0)

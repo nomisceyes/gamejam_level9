@@ -10,7 +10,7 @@ public class TestSacrificeButton1 : MonoBehaviour
     {
         btn.onClick.AddListener(() =>
         {
-            Debug.Log("Sacrifice grain");
+            Debug.Log("Gold");
             G.Game.Totem.MakeSacrifice(SacrificePresets.Gold);
         });
         

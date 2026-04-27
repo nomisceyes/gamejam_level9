@@ -10,7 +10,6 @@ public class ResourcePanel : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("Subsribe");
         G.ResourceManager.OnResourceChanged += UpdateResourceUI;
 
         foreach (ResourceType type in Enum.GetValues(typeof(ResourceType)))
@@ -27,7 +26,6 @@ public class ResourcePanel : MonoBehaviour
         {
             case ResourceType.Food:
                 if (FoodText != null) FoodText.text = currentAmount.ToString();
-                //if (FoodSlider != null) FoodSlider.value = amount;
                 break;
             case ResourceType.Gold:
                 if (GoldText != null) GoldText.text = currentAmount.ToString();

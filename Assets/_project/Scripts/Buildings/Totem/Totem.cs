@@ -3,27 +3,38 @@ using UnityEngine;
 
 public class Totem : MonoBehaviour
 {
-    [Header("Balance Settings")] public int CurrentFavor = 50;
+    [Header("Balance Settings")] 
+    public float CurrentFavor = 50;
     public int MaxFavor = 100;
     public int MinFavorForWin = 85;
     public int MinFavorForLose = 10;
+    public float FavorDecayRate = 0.5f;
+
+    public int TotalSacrifices = 0;
+    private float _decayTimer = 0f;
 
     public event Action OnFavorChange;
 
-    public int TotalSacrifices = 0;
-
-    // private void Start() =>
-    //     CheckWinLoseCondition();
-
+    private void Update()
+    {
+        _decayTimer += Time.deltaTime;
+        if (_decayTimer >= 1f)
+        {
+            _decayTimer = 0f;
+            float decayModifier = G.CurseManager.GetModifier("favor_decay");
+            int decayAmount = Mathf.RoundToInt(FavorDecayRate * decayModifier);
+            
+            CurrentFavor = Mathf.Max(0, CurrentFavor - decayAmount);
+            OnFavorChange?.Invoke();
+            
+            if(CurrentFavor == 20)
+                LogSystem.Instance.AddLog("⚠️ Благосклонность падает! Тотем гневается!", Color.red);
+        }
+    }
+    
     public void MakeSacrifice(SacrificeData sacrifice)
     {
-        // if (CurrentFavor <= MinFavorForLose || CurrentFavor >= MinFavorForWin)
-        // {
-        //     Debug.Log("Game is end");
-        //     return;
-        // }
-
-        int oldFavor = CurrentFavor;
+        float oldFavor = CurrentFavor;
         
         bool enoughResources = G.ResourceManager.SpendResource(sacrifice.Cost);
         if (enoughResources == false)
@@ -47,9 +58,7 @@ public class Totem : MonoBehaviour
 
         if (G.CurseManager.IsCurseActive("greed"))
         {
-            int goldToLose = 5;
-            G.ResourceManager.AddResource(ResourceType.Gold, -goldToLose);
-            Debug.Log($"Greed: You lost {goldToLose} gold");
+            G.ResourceManager.RemoveResource(ResourceType.Gold, 5);
         }
 
         float favorModifier = G.CurseManager.GetModifier("favor_gain");
@@ -75,6 +84,13 @@ public class Totem : MonoBehaviour
         if (CurrentFavor <= 84) return 1.5f;
         return 1f;
     }
+
+    public void FavorDecrease(int amount)
+    {
+        CurrentFavor -= amount;
+        OnFavorChange?.Invoke();
+    }
+        
 
     // private void CheckRitualUnlock()
     // {

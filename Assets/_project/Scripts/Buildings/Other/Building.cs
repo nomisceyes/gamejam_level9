@@ -6,7 +6,7 @@ public class Building : MonoBehaviour
 
     public ResourceType ResourceType;
     public float BaseGatherTime = 2f;
-    public float BaseGatherPerSecond = 1f;
+    //public float BaseGatherPerSecond = 1f;
     public bool AutoGather = true;
 
     private float _timer = 0f;
@@ -24,6 +24,7 @@ public class Building : MonoBehaviour
             return;
 
         float curseModifier = G.CurseManager.GetModifier("gather_speed");
+        Debug.Log(curseModifier);
         float totemModifier = Totem.GetGatheringModifier();
         
         float gatherSpeed = 1f / BaseGatherTime * totemModifier * curseModifier;
@@ -38,34 +39,34 @@ public class Building : MonoBehaviour
         }
     }
 
-    public void GatherResource()
-    {
-        float curseModifier = G.CurseManager.GetModifier("gather_speed");
-        float totemModifier = Totem.GetGatheringModifier();
-        int amount = Mathf.FloorToInt(BaseGatherPerSecond * totemModifier * curseModifier);
-
-        if (amount > 0)
-        {
-            G.ResourceManager.AddResource(ResourceType, amount);
-            Debug.Log($"[{ResourceType}] Собрано {amount}. Модификаторы: тотем={totemModifier}, проклятия={curseModifier}");
-        }
-    }
-
-    public void ManualGather(int multiplier = 1)
-    {
-        float modifier = Totem.GetGatheringModifier();
-        int amount = Mathf.FloorToInt(BaseGatherPerSecond * modifier * multiplier);
-        G.ResourceManager.AddResource(ResourceType, amount);
-    }
-
-    private void ShowCurseEffect()
-    {
-        GetComponent<SpriteRenderer>().color = new Color(0.7f, 0.8f, 0.7f);
-        Invoke(nameof(ResetColor), 0.5f);
-    }
-
-    private void ResetColor()
-    {
-        GetComponent<SpriteRenderer>().color = Color.white;
-    }
+    // public void GatherResource()
+    // {
+    //     float curseModifier = G.CurseManager.GetModifier("gather_speed");
+    //     float totemModifier = Totem.GetGatheringModifier();
+    //     int amount = Mathf.FloorToInt(BaseGatherPerSecond * totemModifier * curseModifier);
+    //
+    //     if (amount > 0)
+    //     {
+    //         G.ResourceManager.AddResource(ResourceType, amount);
+    //         Debug.Log($"[{ResourceType}] Собрано {amount}. Модификаторы: тотем= {totemModifier}, проклятия= {curseModifier}");
+    //     }
+    // }
+    //
+    // public void ManualGather(int multiplier = 1)
+    // {
+    //     float modifier = Totem.GetGatheringModifier();
+    //     int amount = Mathf.FloorToInt(BaseGatherPerSecond * modifier * multiplier);
+    //     G.ResourceManager.AddResource(ResourceType, amount);
+    // }
+    //
+    // private void ShowCurseEffect()
+    // {
+    //     GetComponent<SpriteRenderer>().color = new Color(0.7f, 0.8f, 0.7f);
+    //     Invoke(nameof(ResetColor), 0.5f);
+    // }
+    //
+    // private void ResetColor()
+    // {
+    //     GetComponent<SpriteRenderer>().color = Color.white;
+    // }
 }

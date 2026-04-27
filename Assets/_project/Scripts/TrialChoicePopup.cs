@@ -95,6 +95,7 @@ public class TrialChoicePopup : MonoBehaviour
         
         // Показываем сообщение об отказе
         LogSystem.Instance.AddLog("Ты отказался от испытания! Тотем гневается и желает твоей крови!", Color.red, "😨");
+        G.ResourceManager.RemoveResource(ResourceType.Blood, 15);
         Health.Instance.TakeDamage(10);
     }
     
@@ -110,8 +111,9 @@ public class TrialChoicePopup : MonoBehaviour
         else
         {
             // Штраф за поражение
-            ApplyDefeatPenalty();
-            LogSystem.Instance.AddLog($"ПОРАЖЕНИЕ в испытании! {GetDefeatPenaltyText(_currentSacrificeType)}", 
+            string curseId = GetRandomCurse();
+            ApplyDefeatPenalty(curseId);
+            LogSystem.Instance.AddLog($"ПОРАЖЕНИЕ в испытании! {GetDefeatPenaltyText(_currentSacrificeType, curseId)}", 
                                        Color.red, "💀");
         }
     }
@@ -143,27 +145,27 @@ public class TrialChoicePopup : MonoBehaviour
         G.Game.Totem.CurrentFavor += 5;
     }
     
-    private void ApplyDefeatPenalty()
+    private void ApplyDefeatPenalty(string curseId)
     {
         switch (_currentSacrificeType)
         {
             case ResourceType.Food:
-                G.ResourceManager.AddResource(ResourceType.Food, -15);
+                G.ResourceManager.RemoveResource(ResourceType.Food, 15);
                 break;
             case ResourceType.Gold:
-                G.ResourceManager.AddResource(ResourceType.Gold, -20);
+                G.ResourceManager.RemoveResource(ResourceType.Gold, 20);
                 break;
             case ResourceType.Blood:
-                G.ResourceManager.AddResource(ResourceType.Food, -10);
+                G.ResourceManager.RemoveResource(ResourceType.Food, 10);
                 break;
         }
         
         // Накладываем проклятие
-        string curseId = GetCurseForType(_currentSacrificeType);
-        G.CurseManager.ApplyCurse(curseId, 60f);
+       
+        G.CurseManager.ApplyCurse(curseId, 40f);
         
         // Тотем злится
-        G.Game.Totem.CurrentFavor -= 5;
+        G.Game.Totem.FavorDecrease(10);
     }
     
     private void ApplyRefusalPenalty()
@@ -172,21 +174,21 @@ public class TrialChoicePopup : MonoBehaviour
         switch (_currentSacrificeType)
         {
             case ResourceType.Food:
-                G.ResourceManager.AddResource(ResourceType.Food, -20);
+                G.ResourceManager.RemoveResource(ResourceType.Food, 20);
                 break;
             case ResourceType.Gold:
-                G.ResourceManager.AddResource(ResourceType.Gold, -25);
+                G.ResourceManager.RemoveResource(ResourceType.Gold, 25);
                 break;
             case ResourceType.Blood:
-                G.ResourceManager.AddResource(ResourceType.Food, -15);
+                G.ResourceManager.RemoveResource(ResourceType.Food, 15);
                 break;
         }
         
         // Обязательное проклятие за отказ
-        G.CurseManager.ApplyCurse("rot", 45f);
+        G.CurseManager.ApplyCurse(GetRandomCurse(), 30f);
         
         // Сильный гнев тотема
-        G.Game.Totem.CurrentFavor -= 10;
+        G.Game.Totem.FavorDecrease(10);
     }
     
     private string GetResourceName(ResourceType type)
@@ -233,25 +235,22 @@ public class TrialChoicePopup : MonoBehaviour
         }
     }
     
-    private string GetDefeatPenaltyText(ResourceType type)
+    private string GetDefeatPenaltyText(ResourceType type, string curse)
     {
         switch (type)
         {
-            case ResourceType.Food: return "-15 еды + проклятие Гниль";
-            case ResourceType.Gold: return "-20 золота + проклятие Жадность";
-            case ResourceType.Blood: return "-10 еды + проклятие Жажда";
+            case ResourceType.Food: return $"-15 еды + проклятие {curse}";
+            case ResourceType.Gold: return $"-20 золота + проклятие {curse}";
+            case ResourceType.Blood: return $"-10 еды + проклятие {curse}";
             default: return "- ресурсы + проклятие";
         }
     }
-    
-    private string GetCurseForType(ResourceType type)
+
+    private string GetRandomCurse()
     {
-        switch (type)
-        {
-            case ResourceType.Food: return "rot";
-            case ResourceType.Gold: return "greed";
-            case ResourceType.Blood: return "thirst";
-            default: return "rot";
-        }
+        string[] curces = { "rot" ,"eye","thirst","time_slow","greed"};
+        int randomCurse = Random.Range(0, curces.Length);
+        
+        return curces[randomCurse];
     }
 }

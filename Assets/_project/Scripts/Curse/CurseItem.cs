@@ -21,8 +21,6 @@ public class CurseItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("OnPointerEnter");
-        
         if (CurseData != null)
         {
             TooltipManager.Instance.ShowTooltip(CurseData, _rectTransform);

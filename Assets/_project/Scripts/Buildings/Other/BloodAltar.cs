@@ -11,7 +11,7 @@ public class BloodAltar : Building
     private void Start()
     {
         ResourceType = ResourceType.Blood;
-        BaseGatherPerSecond = 0f; 
+        //BaseGatherPerSecond = 0f; 
         AutoGather = false;
         
         if (collectBloodButton != null)

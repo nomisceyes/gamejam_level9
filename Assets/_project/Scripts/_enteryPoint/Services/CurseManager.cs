@@ -8,9 +8,6 @@ public class CurseManager : MonoBehaviour, IService
 
     public event Action<Curse> OnCurseAdded;
     public event Action<Curse> OnCurseExpired;
-    public event Action<List<Curse>> OnAllCursesChanged;
-
-    //private Dictionary<string, float> multipliers = new();
 
     public void Init()
     {
@@ -40,7 +37,7 @@ public class CurseManager : MonoBehaviour, IService
 
             LogSystem.Instance.AddLog($"Проклятие {existing.DisplayName} продлено на {duration} сек",
                 Color.yellow, "⏰");
-            //Debug.Log($"Curse {curseId} is already active in an independent form");
+            
             return;
         }
 
@@ -56,23 +53,18 @@ public class CurseManager : MonoBehaviour, IService
             newCurse.DisplayName = displayName;
 
         _activeCurses.Add(newCurse);
-        //ApplyCurseEffect(newCurse);
         OnCurseAdded?.Invoke(newCurse);
-        OnAllCursesChanged?.Invoke(_activeCurses);
 
         LogSystem.Instance.LogCurseApplied(newCurse.DisplayName, newCurse.Description, duration);
-        Debug.Log($"Curse {curseId} has been applied");
     }
 
     public void RemoveCurse(Curse curse)
     {
+        TooltipManager.Instance.HideTooltip();
         _activeCurses.Remove(curse);
-        //RemoveCurseEffect(curse);
         OnCurseExpired?.Invoke(curse);
-        OnAllCursesChanged?.Invoke(_activeCurses);
 
         LogSystem.Instance.LogCurseExpired(curse.DisplayName);
-        Debug.Log($"Curse {curse.DisplayName} has been removed");
     }
 
     public float GetModifier(string modifierType)
@@ -91,52 +83,13 @@ public class CurseManager : MonoBehaviour, IService
         }
         
         return totalMultiplier;
-        
-        // if (multipliers.ContainsKey(modifierType))
-        //     return multipliers[modifierType];
-        // return 1f;
     }
 
     public bool IsCurseActive(string curseId) =>
         _activeCurses.Exists(c => c.CurseId == curseId);
 
     public List<Curse> GetActiveCurses() =>
-        new List<Curse>(_activeCurses);
-
-    public List<CurseEffect> GetAllActiveEffects()
-    {
-        List<CurseEffect> allEffects = new List<CurseEffect>();
-        foreach (Curse curse in _activeCurses)
-        {
-            allEffects.AddRange(curse.Effects);
-        }
-        return allEffects;
-    }
-
-    // private void ApplyCurseEffect(Curse curse)
-    // {
-    //     foreach (var effect in curse.Effects)
-    //     {
-    //         if (multipliers.ContainsKey(effect.ModifierType))
-    //             multipliers[effect.ModifierType] *= effect.Multiplier;
-    //         else
-    //             multipliers[effect.ModifierType] = effect.Multiplier;
-    //     }
-    // }
-    //
-    // private void RemoveCurseEffect(Curse curse)
-    // {
-    //     foreach (var effect in curse.Effects)
-    //     {
-    //         if (multipliers.ContainsKey(effect.ModifierType))
-    //         {
-    //             multipliers[effect.ModifierType] /= effect.Multiplier;
-    //
-    //             if (Mathf.Approximately(multipliers[effect.ModifierType], 1f))
-    //                 multipliers.Remove(effect.ModifierType);
-    //         }
-    //     }
-    // }
+        new (_activeCurses);
     
     public void RemoveCurseByName(string curseId)
     {
@@ -146,7 +99,7 @@ public class CurseManager : MonoBehaviour, IService
             RemoveCurse(curse);
         }
     }
-
+    
     private Curse GetCurseTemplate(string curseId)
     {
         Sprite icon = Resources.Load<Sprite>($"CurseIcons/{curseId}");
@@ -160,9 +113,9 @@ public class CurseManager : MonoBehaviour, IService
                 return new Curse
                 {
                     CurseId = "rot",
-                    DisplayName = "Rot",
+                    DisplayName = "Порча",
                     Icon = icon,
-                    Description = "Resource collection has been slowed down by 30%.",
+                    Description = "Сбор ресурсов замедлился на 50%.",
                     Effects = new List<CurseEffect>
                     {
                         new CurseEffect { ModifierType = "gather_speed", Multiplier = 0.5f }
@@ -173,9 +126,9 @@ public class CurseManager : MonoBehaviour, IService
                 return new Curse
                 {
                     CurseId = "eye",
-                    DisplayName = "TotemEye",
+                    DisplayName = "Сглаз",
                     Icon = icon,
-                    Description = "The next victim is 50% weaker.",
+                    Description = "Следующая жертва на 50% слабее.",
                     Effects = new List<CurseEffect>
                     {
                         new CurseEffect { ModifierType = "sacrifice_power", Multiplier = 0.5f }
@@ -186,27 +139,26 @@ public class CurseManager : MonoBehaviour, IService
                 return new Curse
                 {
                     CurseId = "thirst",
-                    DisplayName = "Bloodlust",
+                    DisplayName = "Жажда крови",
                     Icon = icon,
-                    Description = "You need to bring blood, otherwise there will be a fine.",
+                    Description = "Необходимо пожертвовать кровь, иначе будет наложен штраф.",
                     Effects = new List<CurseEffect>(),
-                    OnApplied = (curse) => { Debug.Log("Тотем требует кровь!"); }
                 };
 
-            // case "silence":
-            //     return new Curse
-            //     {
-            //         CurseId = "silence",
-            //         DisplayName = "Silence",
-            //         Icon = icon,
-            //         Description = "Favorability grows 40% slower",
-            //         Effects = new List<CurseEffect>
-            //         {
-            //             new CurseEffect { ModifierType = "favor_gain", Multiplier = 0.6f }
-            //         }
-            //     };
-            //
-            case "curse_of_greed": // Проклятие жадности
+            case "time_slow":
+                return new Curse
+                {
+                    CurseId = "time_slow",
+                    DisplayName = "Замедление времени",
+                    Description = "Благосклонность падает в 2 раза быстрее",
+                    Icon = icon,
+                    Effects = new List<CurseEffect>
+                    {
+                        new CurseEffect { ModifierType = "favor_decay", Multiplier = 2f }
+                    }
+                };
+            
+            case "curse_of_greed": 
                 return new Curse
                 {
                     CurseId = "greed",
