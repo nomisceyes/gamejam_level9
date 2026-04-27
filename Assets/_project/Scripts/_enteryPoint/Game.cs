@@ -14,6 +14,8 @@ public class Game : MonoBehaviour
     {
         if (Totem == null)
             Totem = FindFirstObjectByType<Totem>();
+        
+        G.AudioManager.PlayMusic(R.Audio.BackgroundMusic);
     }
 
     private void Update()

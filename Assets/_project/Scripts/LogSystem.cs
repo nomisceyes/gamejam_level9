@@ -74,12 +74,12 @@ public class LogSystem : MonoBehaviour
     {
         if (success)
         {
-            AddLog($"Испытание пройдено! {power} > {enemyPower}. Тотем вознаграждает тебя!", 
+            AddLog($"Испытание пройдено! Ваше пожертвование достаточно: {power} > {enemyPower}. Тотем вознаграждает тебя!", 
                    _positiveColor, "⚔️");
         }
         else
         {
-            AddLog($"Испытание провалено! {power} ≤ {enemyPower}. Тотем насылает проклятие!", 
+            AddLog($"Испытание провалено! Ценность вашего пожертвования слишком мала: {power} ≤ {enemyPower}. Тотем насылает проклятие!", 
                    _negativeColor, "💀");
         }
     }

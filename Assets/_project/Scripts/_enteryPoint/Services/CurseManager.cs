@@ -10,7 +10,7 @@ public class CurseManager : MonoBehaviour, IService
     public event Action<Curse> OnCurseExpired;
     public event Action<List<Curse>> OnAllCursesChanged;
 
-    private Dictionary<string, float> multipliers = new();
+    //private Dictionary<string, float> multipliers = new();
 
     public void Init()
     {
@@ -56,7 +56,7 @@ public class CurseManager : MonoBehaviour, IService
             newCurse.DisplayName = displayName;
 
         _activeCurses.Add(newCurse);
-        ApplyCurseEffect(newCurse);
+        //ApplyCurseEffect(newCurse);
         OnCurseAdded?.Invoke(newCurse);
         OnAllCursesChanged?.Invoke(_activeCurses);
 
@@ -67,7 +67,7 @@ public class CurseManager : MonoBehaviour, IService
     public void RemoveCurse(Curse curse)
     {
         _activeCurses.Remove(curse);
-        RemoveCurseEffect(curse);
+        //RemoveCurseEffect(curse);
         OnCurseExpired?.Invoke(curse);
         OnAllCursesChanged?.Invoke(_activeCurses);
 
@@ -77,9 +77,24 @@ public class CurseManager : MonoBehaviour, IService
 
     public float GetModifier(string modifierType)
     {
-        if (multipliers.ContainsKey(modifierType))
-            return multipliers[modifierType];
-        return 1f;
+        float totalMultiplier = 1f;
+
+        foreach (Curse curse in _activeCurses)
+        {
+            foreach (CurseEffect effect in curse.Effects)
+            {
+                if (effect.ModifierType == modifierType)
+                {
+                    totalMultiplier *= effect.Multiplier;
+                }
+            }
+        }
+        
+        return totalMultiplier;
+        
+        // if (multipliers.ContainsKey(modifierType))
+        //     return multipliers[modifierType];
+        // return 1f;
     }
 
     public bool IsCurseActive(string curseId) =>
@@ -88,31 +103,41 @@ public class CurseManager : MonoBehaviour, IService
     public List<Curse> GetActiveCurses() =>
         new List<Curse>(_activeCurses);
 
-    private void ApplyCurseEffect(Curse curse)
+    public List<CurseEffect> GetAllActiveEffects()
     {
-        foreach (var effect in curse.Effects)
+        List<CurseEffect> allEffects = new List<CurseEffect>();
+        foreach (Curse curse in _activeCurses)
         {
-            if (multipliers.ContainsKey(effect.ModifierType))
-                multipliers[effect.ModifierType] *= effect.Multiplier;
-            else
-                multipliers[effect.ModifierType] = effect.Multiplier;
+            allEffects.AddRange(curse.Effects);
         }
+        return allEffects;
     }
 
-    private void RemoveCurseEffect(Curse curse)
-    {
-        foreach (var effect in curse.Effects)
-        {
-            if (multipliers.ContainsKey(effect.ModifierType))
-            {
-                multipliers[effect.ModifierType] /= effect.Multiplier;
-
-                if (Mathf.Approximately(multipliers[effect.ModifierType], 1f))
-                    multipliers.Remove(effect.ModifierType);
-            }
-        }
-    }
-
+    // private void ApplyCurseEffect(Curse curse)
+    // {
+    //     foreach (var effect in curse.Effects)
+    //     {
+    //         if (multipliers.ContainsKey(effect.ModifierType))
+    //             multipliers[effect.ModifierType] *= effect.Multiplier;
+    //         else
+    //             multipliers[effect.ModifierType] = effect.Multiplier;
+    //     }
+    // }
+    //
+    // private void RemoveCurseEffect(Curse curse)
+    // {
+    //     foreach (var effect in curse.Effects)
+    //     {
+    //         if (multipliers.ContainsKey(effect.ModifierType))
+    //         {
+    //             multipliers[effect.ModifierType] /= effect.Multiplier;
+    //
+    //             if (Mathf.Approximately(multipliers[effect.ModifierType], 1f))
+    //                 multipliers.Remove(effect.ModifierType);
+    //         }
+    //     }
+    // }
+    
     public void RemoveCurseByName(string curseId)
     {
         Curse curse = _activeCurses.Find(c => c.CurseId == curseId);
@@ -140,7 +165,7 @@ public class CurseManager : MonoBehaviour, IService
                     Description = "Resource collection has been slowed down by 30%.",
                     Effects = new List<CurseEffect>
                     {
-                        new CurseEffect { ModifierType = "sacrifice_power", Multiplier = 0.5f }
+                        new CurseEffect { ModifierType = "gather_speed", Multiplier = 0.5f }
                     }
                 };
 
@@ -181,18 +206,18 @@ public class CurseManager : MonoBehaviour, IService
             //         }
             //     };
             //
-            // case "curse_of_greed": // Проклятие жадности
-            //     return new Curse
-            //     {
-            //         CurseId = "greed",
-            //         DisplayName = "Жадность",
-            //         Icon = icon,
-            //         Description = "Теряешь золото при каждой жертве",
-            //         Effects = new List<CurseEffect>
-            //         {
-            //             new CurseEffect { ModifierType = "gold_loss", Multiplier = 1f }
-            //         }
-            //     };
+            case "curse_of_greed": // Проклятие жадности
+                return new Curse
+                {
+                    CurseId = "greed",
+                    DisplayName = "Жадность",
+                    Icon = icon,
+                    Description = "Теряешь золото при каждой жертве",
+                    Effects = new List<CurseEffect>
+                    {
+                        new CurseEffect { ModifierType = "gold_loss", Multiplier = 1f }
+                    }
+                };
 
             default:
                 return null;

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +9,7 @@ public class Health : MonoBehaviour
     public int MaxHealth;
     public int CurrentHealth;
     
-    public Slider HealthSlider;
+    public Image HealthSlider;
     public Text HealthText;
     //public GameObject LowHealthWarning;
     
@@ -60,7 +61,7 @@ public class Health : MonoBehaviour
     private void UpdateUI()
     {
         if (HealthSlider != null)
-            HealthSlider.value = (float)CurrentHealth / MaxHealth;
+            HealthSlider.fillAmount = (float)CurrentHealth / MaxHealth;
         
         if (HealthText != null)
             HealthText.text = $"{CurrentHealth}/{MaxHealth}";
@@ -70,7 +71,7 @@ public class Health : MonoBehaviour
         
         OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
     }
-    
+
     // private void Die()
     // {
     //     Debug.Log("💀 Игрок умер! Деревня пала...");

@@ -5,10 +5,12 @@ public class Building : MonoBehaviour
     public Totem Totem;
 
     public ResourceType ResourceType;
+    public float BaseGatherTime = 2f;
     public float BaseGatherPerSecond = 1f;
     public bool AutoGather = true;
 
     private float _timer = 0f;
+    private float _currentProgress = 0f;
 
     private void Start()
     {
@@ -21,11 +23,18 @@ public class Building : MonoBehaviour
         if (AutoGather == false)
             return;
 
-        _timer += Time.deltaTime;
-        if (_timer >= 1f)
+        float curseModifier = G.CurseManager.GetModifier("gather_speed");
+        float totemModifier = Totem.GetGatheringModifier();
+        
+        float gatherSpeed = 1f / BaseGatherTime * totemModifier * curseModifier;
+        
+        _currentProgress += gatherSpeed * Time.deltaTime;
+        
+        if (_currentProgress >= 1f)
         {
-            _timer = 0f;
-            GatherResource();
+            int amount = Mathf.FloorToInt(_currentProgress);
+            _currentProgress -= amount;
+            G.ResourceManager.AddResource(ResourceType, amount);
         }
     }
 
@@ -36,10 +45,10 @@ public class Building : MonoBehaviour
         int amount = Mathf.FloorToInt(BaseGatherPerSecond * totemModifier * curseModifier);
 
         if (amount > 0)
+        {
             G.ResourceManager.AddResource(ResourceType, amount);
-
-        if (curseModifier < 0.99f)
-            ShowCurseEffect();
+            Debug.Log($"[{ResourceType}] Собрано {amount}. Модификаторы: тотем={totemModifier}, проклятия={curseModifier}");
+        }
     }
 
     public void ManualGather(int multiplier = 1)

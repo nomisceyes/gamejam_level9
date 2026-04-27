@@ -10,10 +10,13 @@ public class Bootstrapper : MonoBehaviour
     {
         _serviceHolder = new GameObject("---Services---");
         Object.DontDestroyOnLoad(_serviceHolder);
-
+        
+        R.InitAudio();
+        
         G.ResourceManager = CreateSimpleService<ResourceManager>();
         G.TrialSystem = CreateSimpleService<TrialSystem>();
         G.CurseManager = CreateSimpleService<CurseManager>();
+        G.AudioManager = CreateSimpleService<AudioManager>();
         // G.TooltipManager = CreateSimpleService<TooltipManager>();
     }
 

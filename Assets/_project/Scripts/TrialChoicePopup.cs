@@ -1,0 +1,257 @@
+using System;
+using UnityEngine;
+using UnityEngine.UI;
+using Random = UnityEngine.Random;
+
+public class TrialChoicePopup : MonoBehaviour
+{
+   public static TrialChoicePopup Instance;
+    
+    [Header("UI элементы")]
+    public GameObject Panel;
+    public Text TitleText;
+    public Text SacrificePowerText;
+    public Text EnemyPowerText;
+    public Text WinChanceText;
+    public Text RiskRewardText;
+    public Text RefusalPenaltyText;
+    public Button AcceptButton;
+    public Button RefuseButton;
+    
+    // Текущие данные испытания
+    private int _currentSacrificePower;
+    private int _currentEnemyPower;
+    private ResourceType _currentSacrificeType;
+    private Action<bool> _onChoiceMade; // true = принял, false = отказался
+    
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
+        
+        Panel.SetActive(false);
+        
+        if (AcceptButton != null)
+            AcceptButton.onClick.AddListener(AcceptTrial);
+        
+        if (RefuseButton != null)
+            RefuseButton.onClick.AddListener(RefuseTrial);
+    }
+    
+    public void Show(int sacrificePower, int enemyPower, ResourceType type, System.Action<bool> callback)
+    {
+        _currentSacrificePower = sacrificePower;
+        _currentEnemyPower = enemyPower;
+        _currentSacrificeType = type;
+        _onChoiceMade = callback;
+        
+        // Рассчитываем шанс победы
+        float winChance = CalculateWinChance(sacrificePower, enemyPower);
+        int winChancePercent = Mathf.RoundToInt(winChance * 100);
+        
+        // Заполняем UI
+        TitleText.text = "⚔️ ИСПЫТАНИЕ ТОТЕМА ⚔️";
+        SacrificePowerText.text = $"Твоя сила: {sacrificePower}";
+        EnemyPowerText.text = $"Сила врага: {enemyPower}";
+        
+        WinChanceText.text = $"Шанс победы: {winChancePercent}%";
+        WinChanceText.color = winChance >= 0.5f ? Color.green : Color.red;
+        
+        // Риски и награды
+        string rewardText = GetRewardText(type);
+        string penaltyText = GetPenaltyText(type);
+        RiskRewardText.text = $"✅Победа: {rewardText}\n❌ Поражение: {penaltyText} + проклятие";
+        
+        RefusalPenaltyText.text = $"⚠️Отказ: -{GetRefusalCost(type)} {GetResourceName(type)} + проклятие";
+        RefusalPenaltyText.color = Color.red;
+        
+        Panel.SetActive(true);
+    }
+    
+    private void AcceptTrial()
+    {
+        Panel.SetActive(false);
+        
+        // Рассчитываем результат испытания
+        float winChance = CalculateWinChance(_currentSacrificePower, _currentEnemyPower);
+        bool success = Random.value < winChance;
+        
+        _onChoiceMade?.Invoke(true); // true = прошёл испытание
+        
+        // Показываем результат
+        ShowTrialResult(success);
+    }
+    
+    private void RefuseTrial()
+    {
+        Panel.SetActive(false);
+        
+        // Отказ = штраф
+        ApplyRefusalPenalty();
+        
+        _onChoiceMade?.Invoke(false); // false = отказался
+        
+        // Показываем сообщение об отказе
+        LogSystem.Instance.AddLog("Ты отказался от испытания! Тотем гневается и желает твоей крови!", Color.red, "😨");
+        Health.Instance.TakeDamage(10);
+    }
+    
+    private void ShowTrialResult(bool success)
+    {
+        if (success)
+        {
+            // Награда за победу
+            ApplyVictoryReward();
+            LogSystem.Instance.AddLog($"ПОБЕДА в испытании! +{GetRewardText(_currentSacrificeType)} {GetResourceName(_currentSacrificeType)}", 
+                                       Color.green, "🏆");
+        }
+        else
+        {
+            // Штраф за поражение
+            ApplyDefeatPenalty();
+            LogSystem.Instance.AddLog($"ПОРАЖЕНИЕ в испытании! {GetDefeatPenaltyText(_currentSacrificeType)}", 
+                                       Color.red, "💀");
+        }
+    }
+    
+    private float CalculateWinChance(int playerPower, int enemyPower)
+    {
+        return Mathf.Clamp((float)playerPower / enemyPower, 0.1f, 0.9f);
+    }
+    
+    private void ApplyVictoryReward()
+    {
+        switch (_currentSacrificeType)
+        {
+            case ResourceType.Food:
+                G.ResourceManager.AddResource(ResourceType.Food, 12);
+                G.ResourceManager.AddResource(ResourceType.Gold, 8);
+                break;
+            case ResourceType.Gold:
+                G.ResourceManager.AddResource(ResourceType.Food, 15);
+                G.ResourceManager.AddResource(ResourceType.Gold, 15);
+                break;
+            case ResourceType.Blood:
+                G.ResourceManager.AddResource(ResourceType.Food, 25);
+                G.ResourceManager.AddResource(ResourceType.Gold, 20);
+                break;
+        }
+        
+        // Доп. бонус — немного благосклонности
+        G.Game.Totem.CurrentFavor += 5;
+    }
+    
+    private void ApplyDefeatPenalty()
+    {
+        switch (_currentSacrificeType)
+        {
+            case ResourceType.Food:
+                G.ResourceManager.AddResource(ResourceType.Food, -15);
+                break;
+            case ResourceType.Gold:
+                G.ResourceManager.AddResource(ResourceType.Gold, -20);
+                break;
+            case ResourceType.Blood:
+                G.ResourceManager.AddResource(ResourceType.Food, -10);
+                break;
+        }
+        
+        // Накладываем проклятие
+        string curseId = GetCurseForType(_currentSacrificeType);
+        G.CurseManager.ApplyCurse(curseId, 60f);
+        
+        // Тотем злится
+        G.Game.Totem.CurrentFavor -= 5;
+    }
+    
+    private void ApplyRefusalPenalty()
+    {
+        // Отказ стоит дороже
+        switch (_currentSacrificeType)
+        {
+            case ResourceType.Food:
+                G.ResourceManager.AddResource(ResourceType.Food, -20);
+                break;
+            case ResourceType.Gold:
+                G.ResourceManager.AddResource(ResourceType.Gold, -25);
+                break;
+            case ResourceType.Blood:
+                G.ResourceManager.AddResource(ResourceType.Food, -15);
+                break;
+        }
+        
+        // Обязательное проклятие за отказ
+        G.CurseManager.ApplyCurse("rot", 45f);
+        
+        // Сильный гнев тотема
+        G.Game.Totem.CurrentFavor -= 10;
+    }
+    
+    private string GetResourceName(ResourceType type)
+    {
+        switch (type)
+        {
+            case ResourceType.Food: return "еды";
+            case ResourceType.Gold: return "золота";
+            case ResourceType.Blood: return "крови";
+            default: return "ресурсов";
+        }
+    }
+    
+    private string GetRewardText(ResourceType type)
+    {
+        switch (type)
+        {
+            case ResourceType.Food: return "+12 еды, +8 золота";
+            case ResourceType.Gold: return "+15 еды, +15 золота";
+            case ResourceType.Blood: return "+25 еды, +20 золота";
+            default: return "+ ресурсы";
+        }
+    }
+    
+    private string GetPenaltyText(ResourceType type)
+    {
+        switch (type)
+        {
+            case ResourceType.Food: return "-15 еды";
+            case ResourceType.Gold: return "-20 золота";
+            case ResourceType.Blood: return "-10 еды";
+            default: return "- ресурсы";
+        }
+    }
+    
+    private int GetRefusalCost(ResourceType type)
+    {
+        switch (type)
+        {
+            case ResourceType.Food: return 20;
+            case ResourceType.Gold: return 25;
+            case ResourceType.Blood: return 30;
+            default: return 15;
+        }
+    }
+    
+    private string GetDefeatPenaltyText(ResourceType type)
+    {
+        switch (type)
+        {
+            case ResourceType.Food: return "-15 еды + проклятие Гниль";
+            case ResourceType.Gold: return "-20 золота + проклятие Жадность";
+            case ResourceType.Blood: return "-10 еды + проклятие Жажда";
+            default: return "- ресурсы + проклятие";
+        }
+    }
+    
+    private string GetCurseForType(ResourceType type)
+    {
+        switch (type)
+        {
+            case ResourceType.Food: return "rot";
+            case ResourceType.Gold: return "greed";
+            case ResourceType.Blood: return "thirst";
+            default: return "rot";
+        }
+    }
+}

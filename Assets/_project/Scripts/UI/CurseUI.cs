@@ -17,12 +17,15 @@ public class CurseUI : MonoBehaviour
 
     private void Update()
     {
-        foreach (var curse in G.CurseManager.GetActiveCurses())
+        if (CurseIcons.Count > 0)
         {
-            if (CurseIcons.ContainsKey(curse.CurseId))
+            foreach (var curse in G.CurseManager.GetActiveCurses())
             {
-                Text text = CurseIcons[curse.CurseId].GetComponentInChildren<Text>();
-                text.text = $"{curse.DisplayName}\n{curse.RemainingTime:F0}c";
+                if (CurseIcons.ContainsKey(curse.CurseId))
+                {
+                    Text text = CurseIcons[curse.CurseId].GetComponentInChildren<Text>();
+                    text.text = $"{curse.DisplayName}\n{curse.RemainingTime:F0}c";
+                }
             }
         }
     }
