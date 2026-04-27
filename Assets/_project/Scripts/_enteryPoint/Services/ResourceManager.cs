@@ -15,7 +15,7 @@ public class ResourceManager : MonoBehaviour, IService
 
         Resources[ResourceType.Food] = 30;
         Resources[ResourceType.Gold] = 50;
-        Resources[ResourceType.Blood] = 0;
+        Resources[ResourceType.Blood] = 30;
     }
 
     public void AddResource(ResourceType type, int amount)

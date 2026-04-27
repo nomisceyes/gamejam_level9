@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class TestSacrificeButton : MonoBehaviour
+public class TestSacrificeButton1 : MonoBehaviour
 {
     public Button btn;
     public Text btnText;
@@ -11,7 +11,7 @@ public class TestSacrificeButton : MonoBehaviour
         btn.onClick.AddListener(() =>
         {
             Debug.Log("Sacrifice grain");
-            G.Game.Totem.MakeSacrifice(SacrificePresets.Food);
+            G.Game.Totem.MakeSacrifice(SacrificePresets.Gold);
         });
         
         btnText.text = "Sacrifice grain";

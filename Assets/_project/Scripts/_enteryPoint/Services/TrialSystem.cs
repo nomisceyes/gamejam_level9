@@ -14,15 +14,16 @@ public class TrialSystem : MonoBehaviour, IService
     {
         int sacrificeCount = GetSicrificeCount();
         int index = Mathf.Clamp(sacrificeCount / 3, 0 , TrialChances.Length - 1);
-        float chance = TrialChances[index];
+        // float chance = TrialChances[index];
 
-        if (Random.value > chance)
-        {
-            Debug.Log("Fail");
-            return;
-        }
+        // if (Random.value > chance)
+        // {
+        //     Debug.Log("Fail");
+        //     return;
+        // }
 
         int enemyPower = GetEnemyPower(sacrificeCount);
+        sacrificePower = 0;
         bool success = sacrificePower > enemyPower;
 
         if (success)
@@ -34,7 +35,7 @@ public class TrialSystem : MonoBehaviour, IService
         }
         else
         {
-            G.ResourceManager.AddResource(ResourceType.Grief, 5);
+            G.ResourceManager.AddResource(ResourceType.Food, 5);
             ApplyRandomCurse();
             Debug.Log("Lose in trial");
         }

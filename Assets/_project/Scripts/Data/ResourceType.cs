@@ -3,5 +3,4 @@
     Food,
     Gold,
     Blood,
-    Grief
 }

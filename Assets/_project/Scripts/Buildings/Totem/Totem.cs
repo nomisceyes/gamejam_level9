@@ -9,7 +9,7 @@ public class Totem : MonoBehaviour
     public int MinFavorForWin = 85;
     public int MinFavorForLose = 10;
     
-    public event Action<int> OnFavorChange;
+    public event Action OnFavorChange;
     public event Action OnTotemWin;
     public event Action OnTotemLose;
 
@@ -37,7 +37,7 @@ public class Totem : MonoBehaviour
         {
             Debug.Log("Curse of Thirst! The totem demands blood.");
             CurrentFavor -= 15;
-            OnFavorChange?.Invoke(CurrentFavor);
+            OnFavorChange?.Invoke();
             
             G.CurseManager.RemoveCurseByName("thirst");
             return;
@@ -56,7 +56,7 @@ public class Totem : MonoBehaviour
         float favorModifier = G.CurseManager.GetModifier("favor_gain");     
         int finalFavorChange = Mathf.FloorToInt(sacrifice.FavorChange * favorModifier);
         CurrentFavor = Mathf.Clamp(CurrentFavor + finalFavorChange, 0, MaxFavor);
-        OnFavorChange?.Invoke(CurrentFavor);
+        OnFavorChange?.Invoke();
         
         //int sacrificePower = sacrifice.BasePower;
         

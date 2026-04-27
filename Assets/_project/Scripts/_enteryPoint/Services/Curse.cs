@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class Curse
 {
     public string CurseId;
     public string DisplayName;
-    public string Icon;
+    public Sprite Icon;
     [TextArea] public string Description;
     public float RemainingTime;
     public bool IsStrong = false;

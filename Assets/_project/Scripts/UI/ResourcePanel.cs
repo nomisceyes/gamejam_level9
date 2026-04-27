@@ -38,9 +38,9 @@ public class ResourcePanel : MonoBehaviour
                 if (BloodText != null) BloodText.text = currentAmount.ToString();
                 //if (bloodSlider != null) bloodSlider.value = amount;
                 break;
-            case ResourceType.Grief:
-                if (GriefText != null) GriefText.text = currentAmount.ToString();
-                break;
+            // case ResourceType.Grief:
+            //     if (GriefText != null) GriefText.text = currentAmount.ToString();
+            //     break;
             // case ResourceType.Memory:
             //     if (memoryText != null) memoryText.text = $"{amount}";
             //     break;

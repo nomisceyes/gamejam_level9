@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class CurseManager : MonoBehaviour, IService
@@ -14,8 +15,9 @@ public class CurseManager : MonoBehaviour, IService
 
     public void Init()
     {
+        
     }
-
+    
     private void Update()
     {
         if (_activeCurses.Count != 0)
@@ -118,6 +120,11 @@ public class CurseManager : MonoBehaviour, IService
 
     private Curse GetCurseTemplate(string curseId)
     {
+        Sprite icon = Resources.Load<Sprite>($"CurseIcons/{curseId}");
+        
+        if(icon == null)
+            Debug.LogWarning($"Unable to find curse icon {curseId}");
+        
         switch (curseId)
         {
             case "rot":
@@ -125,7 +132,7 @@ public class CurseManager : MonoBehaviour, IService
                 {
                     CurseId = "rot",
                     DisplayName = "Rot",
-                    Icon = "🌿",
+                    Icon = icon,
                     Description = "Resource collection has been slowed down by 30%.",
                     Effects = new List<CurseEffect>
                     {
@@ -138,53 +145,54 @@ public class CurseManager : MonoBehaviour, IService
                 {
                     CurseId = "eye",
                     DisplayName = "TotemEye",
-                    Icon = "👁️",
+                    Icon = icon,
                     Description = "The next victim is 50% weaker.",
                     Effects = new List<CurseEffect>
                     {
                         new CurseEffect { ModifierType = "sacrifice_power", Multiplier = 0.5f }
                     }
                 };
-
+            
             case "thirst":
                 return new Curse
                 {
                     CurseId = "thirst",
                     DisplayName = "Bloodlust",
-                    Icon = "🩸",
+                    Icon = icon,
                     Description = "You need to bring blood, otherwise there will be a fine.",
                     Effects = new List<CurseEffect>(),
                     OnApplied = (curse) => { Debug.Log("Тотем требует кровь!"); }
                 };
             
-            case "silence":
-                return new Curse
-                {
-                    CurseId = "silence",
-                    DisplayName = "Silence",
-                    Icon = "🔇",
-                    Description = "Favorability grows 40% slower",
-                    Effects = new List<CurseEffect>
-                    {
-                        new CurseEffect { ModifierType = "favor_gain", Multiplier = 0.6f }
-                    }
-                };
-            
-            case "curse_of_greed": // Проклятие жадности
-                return new Curse
-                {
-                    CurseId = "greed",
-                    DisplayName = "Жадность",
-                    Icon = "💰",
-                    Description = "Теряешь золото при каждой жертве",
-                    Effects = new List<CurseEffect>
-                    {
-                        new CurseEffect { ModifierType = "gold_loss", Multiplier = 1f }
-                    }
-                };
+            // case "silence":
+            //     return new Curse
+            //     {
+            //         CurseId = "silence",
+            //         DisplayName = "Silence",
+            //         Icon = icon,
+            //         Description = "Favorability grows 40% slower",
+            //         Effects = new List<CurseEffect>
+            //         {
+            //             new CurseEffect { ModifierType = "favor_gain", Multiplier = 0.6f }
+            //         }
+            //     };
+            //
+            // case "curse_of_greed": // Проклятие жадности
+            //     return new Curse
+            //     {
+            //         CurseId = "greed",
+            //         DisplayName = "Жадность",
+            //         Icon = icon,
+            //         Description = "Теряешь золото при каждой жертве",
+            //         Effects = new List<CurseEffect>
+            //         {
+            //             new CurseEffect { ModifierType = "gold_loss", Multiplier = 1f }
+            //         }
+            //     };
                 
             default:
                 return null;
         }
     }
+
 }

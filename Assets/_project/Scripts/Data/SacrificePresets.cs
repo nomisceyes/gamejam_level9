@@ -8,6 +8,15 @@
         FavorChange = 5,
         Cost = new[] { new ResourceCost {Type = ResourceType.Food, Amount = 20}}
     };
+
+    public static SacrificeData Gold = new SacrificeData
+    {
+        Name = "Gold",
+        Type = ResourceType.Gold,
+        BasePower = 15,
+        FavorChange = 8,
+        Cost = new[] { new ResourceCost { Type = ResourceType.Gold, Amount = 25 } }
+    };
     
     public static SacrificeData Blood = new SacrificeData
     {

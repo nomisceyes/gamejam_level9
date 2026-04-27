@@ -26,12 +26,24 @@ public class CurseUI : MonoBehaviour
             }
         }
     }
-    
+
     private void AddCurseIcon(Curse curse)
     {
-        GameObject icon = Instantiate(CursePrefab, CurseContainer);
-        icon.GetComponentInChildren<Text>().text = $"{curse.Icon} {curse.DisplayName}\n{curse.RemainingTime:F0}c";
-        CurseIcons[curse.CurseId] = icon;
+        if (CursePrefab == null || CurseContainer == null)
+            return;
+
+        GameObject curseItem = Instantiate(CursePrefab, CurseContainer);
+
+        CurseItem item = curseItem.GetComponent<CurseItem>();
+        if (item == null)
+            item = curseItem.AddComponent<CurseItem>();
+
+        item.NameText = curseItem.transform.Find("NameText")?.GetComponent<Text>();
+        //item.TimerText = curseItem.transform.Find("TimerText")?.GetComponent<Text>();
+        
+        item.Init(curse);
+        
+        CurseIcons[curse.CurseId] = curseItem;
     }
 
     private void RemoveCurseIcon(Curse curse)
