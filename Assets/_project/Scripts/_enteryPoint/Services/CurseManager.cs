@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine;
 
 public class CurseManager : MonoBehaviour, IService
@@ -15,9 +14,8 @@ public class CurseManager : MonoBehaviour, IService
 
     public void Init()
     {
-        
     }
-    
+
     private void Update()
     {
         if (_activeCurses.Count != 0)
@@ -36,9 +34,13 @@ public class CurseManager : MonoBehaviour, IService
     public void ApplyCurse(string curseId, float duration, string displayName = null)
     {
         Curse existing = _activeCurses.Find(c => c.CurseId == curseId);
-        if (existing != null && existing.IsStrong)
+        if (existing != null)
         {
-            Debug.Log($"Curse {curseId} is already active in an independent form");
+            existing.RemainingTime = Mathf.Max(existing.RemainingTime, duration);
+
+            LogSystem.Instance.AddLog($"Проклятие {existing.DisplayName} продлено на {duration} сек",
+                Color.yellow, "⏰");
+            //Debug.Log($"Curse {curseId} is already active in an independent form");
             return;
         }
 
@@ -58,6 +60,7 @@ public class CurseManager : MonoBehaviour, IService
         OnCurseAdded?.Invoke(newCurse);
         OnAllCursesChanged?.Invoke(_activeCurses);
 
+        LogSystem.Instance.LogCurseApplied(newCurse.DisplayName, newCurse.Description, duration);
         Debug.Log($"Curse {curseId} has been applied");
     }
 
@@ -68,6 +71,7 @@ public class CurseManager : MonoBehaviour, IService
         OnCurseExpired?.Invoke(curse);
         OnAllCursesChanged?.Invoke(_activeCurses);
 
+        LogSystem.Instance.LogCurseExpired(curse.DisplayName);
         Debug.Log($"Curse {curse.DisplayName} has been removed");
     }
 
@@ -108,7 +112,7 @@ public class CurseManager : MonoBehaviour, IService
             }
         }
     }
-    
+
     public void RemoveCurseByName(string curseId)
     {
         Curse curse = _activeCurses.Find(c => c.CurseId == curseId);
@@ -121,10 +125,10 @@ public class CurseManager : MonoBehaviour, IService
     private Curse GetCurseTemplate(string curseId)
     {
         Sprite icon = Resources.Load<Sprite>($"CurseIcons/{curseId}");
-        
-        if(icon == null)
+
+        if (icon == null)
             Debug.LogWarning($"Unable to find curse icon {curseId}");
-        
+
         switch (curseId)
         {
             case "rot":
@@ -152,7 +156,7 @@ public class CurseManager : MonoBehaviour, IService
                         new CurseEffect { ModifierType = "sacrifice_power", Multiplier = 0.5f }
                     }
                 };
-            
+
             case "thirst":
                 return new Curse
                 {
@@ -163,7 +167,7 @@ public class CurseManager : MonoBehaviour, IService
                     Effects = new List<CurseEffect>(),
                     OnApplied = (curse) => { Debug.Log("Тотем требует кровь!"); }
                 };
-            
+
             // case "silence":
             //     return new Curse
             //     {
@@ -189,10 +193,9 @@ public class CurseManager : MonoBehaviour, IService
             //             new CurseEffect { ModifierType = "gold_loss", Multiplier = 1f }
             //         }
             //     };
-                
+
             default:
                 return null;
         }
     }
-
 }

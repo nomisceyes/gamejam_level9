@@ -7,8 +7,6 @@ public class ResourcePanel : MonoBehaviour
     public Text FoodText;
     public Text GoldText;
     public Text BloodText;
-    public Text GriefText;
-    // public Text MemoryText;
 
     private void Start()
     {
@@ -36,11 +34,7 @@ public class ResourcePanel : MonoBehaviour
                 break;
             case ResourceType.Blood:
                 if (BloodText != null) BloodText.text = currentAmount.ToString();
-                //if (bloodSlider != null) bloodSlider.value = amount;
                 break;
-            // case ResourceType.Grief:
-            //     if (GriefText != null) GriefText.text = currentAmount.ToString();
-            //     break;
         }
     }
 }

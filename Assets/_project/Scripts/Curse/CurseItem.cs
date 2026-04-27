@@ -5,10 +5,7 @@ using UnityEngine.UI;
 public class CurseItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public Curse CurseData;
-    
     public Image IconImage;
-    public Text NameText;
-    public Text DescriptionText;
     
     private RectTransform _rectTransform;
 

@@ -1,5 +1,5 @@
+using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,7 +39,7 @@ public class LogSystem : MonoBehaviour
     public void AddLog(string message, Color color, string icon = "📜")
     {
         GameObject newEntry = Instantiate(LOGEntryPrefab, LOGContainer);
-        TextMeshProUGUI textComponent = newEntry.GetComponent<TextMeshProUGUI>();
+        Text textComponent = newEntry.GetComponent<Text>();
         
         string timestamp = System.DateTime.Now.ToString("HH:mm:ss");
         textComponent.text = $"[{timestamp}] {icon} {message}";
@@ -56,7 +56,6 @@ public class LogSystem : MonoBehaviour
         StartCoroutine(AutoScroll());
     }
     
-    // Удобные методы для разных типов сообщений
     public void LogSacrifice(string resourceName, int favorChange)
     {
         if (favorChange > 0)
@@ -96,17 +95,17 @@ public class LogSystem : MonoBehaviour
         AddLog($"Проклятие {curseName} исчезло.", _neutralColor, "✨");
     }
     
-    public void LogResourceGain(ResourceType type, int amount)
-    {
-        string icon = type switch
-        {
-            ResourceType.Food => "🌾",
-            ResourceType.Gold => "💰",
-            ResourceType.Blood => "🩸",
-            _ => "📦"
-        };
-        AddLog($"Получено +{amount} {type}", _positiveColor, icon);
-    }
+    // public void LogResourceGain(ResourceType type, int amount)
+    // {
+        // string icon = type switch
+        // {
+            // ResourceType.Food => "🌾",
+            // ResourceType.Gold => "💰",
+            // ResourceType.Blood => "🩸",
+            // _ => "📦"
+        // };
+        // AddLog($"Получено +{amount} {type}", _positiveColor, icon);
+    // }
     
     public void LogFavorChange(int oldFavor, int newFavor)
     {
@@ -125,7 +124,7 @@ public class LogSystem : MonoBehaviour
             AddLog("Тотем уничтожил деревню. Ты не смог его умилостивить. ПОРАЖЕНИЕ!", _negativeColor, "💀");
     }
     
-    private System.Collections.IEnumerator AutoScroll()
+    private IEnumerator AutoScroll()
     {
         yield return new WaitForEndOfFrame();
         if (ScrollRect != null)

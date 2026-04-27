@@ -22,6 +22,9 @@ public class ResourceManager : MonoBehaviour, IService
     {
         if (amount < 0) throw new ArgumentOutOfRangeException("Отрицалово");
         
+        // if (amount > 0)
+        //     LogSystem.Instance.LogResourceGain(type, amount);
+        
         Resources[type] += amount;
         OnResourceChanged?.Invoke(type);
     }

@@ -25,9 +25,7 @@ public class TooltipManager : MonoBehaviour, IService
             Instance = this;
         else
             Destroy(gameObject);
-
-
-        //TooltipPanel = Resources.Load<GameObject>("Prefabs/TooltipPanel");
+        
 
         if (TooltipPanel != null)
             TooltipPanel.SetActive(false);
