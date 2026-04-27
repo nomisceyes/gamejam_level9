@@ -12,15 +12,15 @@ public class TrialSystem : MonoBehaviour, IService
 
     public void StartTrial(int sacrificePower, ResourceType resourceType)
     {
-        int sacrificeCount = GetSicrificeCount();
+        int sacrificeCount = GetSacrificeCount();
         int index = Mathf.Clamp(sacrificeCount / 3, 0 , TrialChances.Length - 1);
-        // float chance = TrialChances[index];
+        float chance = TrialChances[index];
 
-        // if (Random.value > chance)
-        // {
-        //     Debug.Log("Fail");
-        //     return;
-        // }
+        if (Random.value > chance)
+        {
+            Debug.Log("Fail");
+            return;
+        }
 
         int enemyPower = GetEnemyPower(sacrificeCount);
         sacrificePower = 0;
@@ -39,6 +39,8 @@ public class TrialSystem : MonoBehaviour, IService
             ApplyRandomCurse();
             Debug.Log("Lose in trial");
         }
+        
+        LogSystem.Instance.LogTrialResult(success, sacrificePower, enemyPower);
     }
 
     private int GetEnemyPower(int sacrificeCount)
@@ -60,5 +62,6 @@ public class TrialSystem : MonoBehaviour, IService
         Debug.Log($"Тотем насылает проклятие: {curseId} на {duration} сек");
     }
 
-    private int GetSicrificeCount() => G.Game.Totem.TotalSacrifices;
+    private int GetSacrificeCount() =>
+        G.Game.Totem.TotalSacrifices;
 }

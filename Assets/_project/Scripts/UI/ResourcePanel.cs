@@ -41,9 +41,6 @@ public class ResourcePanel : MonoBehaviour
             // case ResourceType.Grief:
             //     if (GriefText != null) GriefText.text = currentAmount.ToString();
             //     break;
-            // case ResourceType.Memory:
-            //     if (memoryText != null) memoryText.text = $"{amount}";
-            //     break;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿public static class SacrificePresets
+﻿using UnityEngine;
+
+public static class SacrificePresets
 {
     public static SacrificeData Food = new SacrificeData
     {
@@ -24,6 +26,15 @@
         Type = ResourceType.Blood,
         BasePower = 35,
         FavorChange = 15,
-        Cost = new[] { new ResourceCost {Type = ResourceType.Blood, Amount = 30}}
+        Cost = new[]
+        {
+            new ResourceCost {Type = ResourceType.Blood, Amount = 30}
+        },
+        
+        Action = () =>
+        {
+            Health.Instance.TakeDamage(10);
+            Debug.Log("Вы пожертвовали здоровьем");
+        }
     };
 }

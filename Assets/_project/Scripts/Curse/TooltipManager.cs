@@ -75,7 +75,7 @@ public class TooltipManager : MonoBehaviour, IService
         }
 
         if (TooltipTitle != null)
-            TooltipTitle.text = $"{curse.Icon} {curse.DisplayName}";
+            TooltipTitle.text = $"{curse.DisplayName}";
 
         if (TooltipDescription != null)
             TooltipDescription.text = curse.Description;
@@ -83,8 +83,6 @@ public class TooltipManager : MonoBehaviour, IService
         PositionTooltipNearIcon(_targetIcon);
         
         TooltipPanel.SetActive(true);
-        // if (TooltipTimer != null)
-        //     TooltipTimer.text = $"Осталось: {Mathf.CeilToInt(curse.RemainingTime)}с";
     }
 
     private void PositionTooltipNearIcon(RectTransform targetIcon)
@@ -94,7 +92,7 @@ public class TooltipManager : MonoBehaviour, IService
         Vector3 iconWorldPos = targetIcon.position;
         Vector2 iconScreenPos = RectTransformUtility.WorldToScreenPoint(null, iconWorldPos);
         
-        TooltipPanel.transform.position = iconScreenPos + new Vector2(targetIcon.rect.width + 120f, 180f);
+        TooltipPanel.transform.position = iconScreenPos + new Vector2(targetIcon.rect.width + 120f, -100f);
     }
 
     public void HideTooltip()

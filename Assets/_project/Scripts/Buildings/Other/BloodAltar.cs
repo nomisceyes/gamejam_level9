@@ -1,26 +1,48 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class BloodAltar : Building
 {
-    public int BloodAmount = 3;
+    public int BloodPerSacrifice = 5;  
+    public int HealthCostPerUse = 10;
+    
+    public Button collectBloodButton;
     
     private void Start()
     {
         ResourceType = ResourceType.Blood;
-        BaseGatherPerSecond = 0f;
+        BaseGatherPerSecond = 0f; 
         AutoGather = false;
+        
+        if (collectBloodButton != null)
+            collectBloodButton.onClick.AddListener(CollectBloodManually);
     }
 
-    private void OnMouseDown()
+    public void CollectBloodManually()
     {
-        Debug.Log("Clicked on blood altar");
-        SacrificeHealth(BloodAmount);
+        if (Health.Instance.HasEnoughHealth(HealthCostPerUse) == false)
+        {
+            Debug.Log($"❌ Не хватает здоровья! Нужно {HealthCostPerUse} HP");
+            return;
+        }
+
+        Health.Instance.TakeDamage(HealthCostPerUse);
+        G.ResourceManager.AddResource(ResourceType.Blood, BloodPerSacrifice);
+        G.Game.Totem.MakeSacrifice(SacrificePresets.Blood);
+        
+        Debug.Log($"🩸 Пожертвовано {HealthCostPerUse} HP → получено {BloodPerSacrifice} крови");
+        
+        ShowBloodCollectionEffect();
     }
     
-    public void SacrificeHealth(int hpToConvert)
+    private void ShowBloodCollectionEffect()
     {
-        G.ResourceManager.AddResource(ResourceType.Blood, hpToConvert);
-        
-        //PlayerHealth.TakeDamage(hpToConvert);
+        GetComponent<SpriteRenderer>().color = Color.red;
+        Invoke(nameof(ResetColor), 0.3f);
+    }
+    
+    private void ResetColor()
+    {
+        GetComponent<SpriteRenderer>().color = Color.white;
     }
 }

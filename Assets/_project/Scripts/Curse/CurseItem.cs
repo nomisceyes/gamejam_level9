@@ -15,19 +15,9 @@ public class CurseItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     public void Init(Curse curse)
     {
         CurseData = curse;
-
-        // NameText.text = curse.DisplayName;
-        // DescriptionText.text = curse.Description;
-        Debug.Log("Init");
         
         IconImage = GetComponent<Image>();
         IconImage.sprite = CurseData.Icon;
-        
-        if (NameText != null)
-            NameText.text = $"{curse.Icon} {curse.DisplayName}";
-        
-        if(DescriptionText != null)
-            DescriptionText.text = $"{curse.Description}";
         
         _rectTransform = GetComponent<RectTransform>();
     }

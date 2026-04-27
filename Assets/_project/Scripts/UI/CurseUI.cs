@@ -22,7 +22,7 @@ public class CurseUI : MonoBehaviour
             if (CurseIcons.ContainsKey(curse.CurseId))
             {
                 Text text = CurseIcons[curse.CurseId].GetComponentInChildren<Text>();
-                text.text = $"{curse.Icon} {curse.DisplayName}\n{curse.RemainingTime:F0}c";
+                text.text = $"{curse.DisplayName}\n{curse.RemainingTime:F0}c";
             }
         }
     }
@@ -37,9 +37,6 @@ public class CurseUI : MonoBehaviour
         CurseItem item = curseItem.GetComponent<CurseItem>();
         if (item == null)
             item = curseItem.AddComponent<CurseItem>();
-
-        item.NameText = curseItem.transform.Find("NameText")?.GetComponent<Text>();
-        //item.TimerText = curseItem.transform.Find("TimerText")?.GetComponent<Text>();
         
         item.Init(curse);
         
