@@ -42,6 +42,7 @@ public class TrialChoicePopup : MonoBehaviour
     public void Show(int sacrificePower, int enemyPower, ResourceType type, System.Action<bool> callback)
     {
         G.Game.PausedGame();
+        G.AudioManager.PlaySound(R.Audio.EvilLaughSound);
         
         _currentSacrificePower = sacrificePower;
         _currentEnemyPower = enemyPower;
@@ -51,7 +52,7 @@ public class TrialChoicePopup : MonoBehaviour
         float winChance = CalculateWinChance(sacrificePower, enemyPower);
         int winChancePercent = Mathf.RoundToInt(winChance * 100);
         
-        TitleText.text = "⚔️ИСПЫТАНИЕ ГОСПОДИНА ⚔️";
+        TitleText.text = "⚔️ИСПЫТАНИЕ ⚔️";
         SacrificePowerText.text = $"Твоя сила: {sacrificePower}";
         EnemyPowerText.text = $"Сила врага: {enemyPower}";
         
@@ -153,6 +154,7 @@ public class TrialChoicePopup : MonoBehaviour
                 break;
         }
        
+        G.AudioManager.PlaySound(R.Audio.EvilRoarSound);
         G.CurseManager.ApplyCurse(curseId, 40f);
         G.Game.Totem.FavorDecrease(10);
     }
@@ -172,6 +174,7 @@ public class TrialChoicePopup : MonoBehaviour
                 break;
         }
         
+        G.AudioManager.PlaySound(R.Audio.EvilRoarSound);
         G.CurseManager.ApplyCurse(GetRandomCurse(), 30f);
         G.Game.Totem.FavorDecrease(10);
     }

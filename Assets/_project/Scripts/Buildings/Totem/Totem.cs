@@ -42,11 +42,18 @@ public class Totem : MonoBehaviour
     {
         float oldFavor = CurrentFavor;
 
-        bool enoughResources = G.ResourceManager.SpendResource(sacrifice.Cost);
-        if (enoughResources == false)
+        if (sacrifice.Type == ResourceType.Health)
         {
-            Debug.Log("You don't have enough resources");
-            return;
+            Health.Instance.TakeDamage(sacrifice.HealthCost);
+        }
+        else
+        {
+            bool enoughResources = G.ResourceManager.SpendResource(sacrifice.Cost);
+            if (enoughResources == false)
+            {
+                Debug.Log("You don't have enough resources");
+                return;
+            }
         }
 
         float repetitionModifier = CalculateRepetitionModifier(sacrifice.Type);

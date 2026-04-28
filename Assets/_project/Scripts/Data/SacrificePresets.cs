@@ -32,8 +32,7 @@
         Name = "Собственная кровь",
         Type = ResourceType.Health,
         BasePower = 40,      // Сильная жертва
-        FavorChange = 15,    // Хорошая награда
-        HealthCost = 20,     // Стоимость в HP
-        Cost = new ResourceCost[0]  // Не требует ресурсов
+        FavorChange = 15,
+        HealthCost = 10,
     };
 }

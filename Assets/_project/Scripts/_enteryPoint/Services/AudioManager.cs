@@ -6,7 +6,7 @@ public class AudioManager : MonoBehaviour, IService
     private AudioSource _soundSource;
 
     public float MusicVolume { get; private set; } = 0.25f;
-    public float SoundVolume { get; private set; } = 0.25f;
+    public float SoundVolume { get; private set; } = 1f;
 
     private float _savedMusicTime = 0f;
 
@@ -71,7 +71,7 @@ public class AudioManager : MonoBehaviour, IService
 
         audioSource.clip = clip;
         audioSource.volume = SoundVolume;
-        audioSource.pitch = 1f + addedPitch;
+        //audioSource.pitch = 1f + addedPitch;
         audioSource.Play();
 
         Destroy(tempAudioObject, (clip.length / audioSource.pitch) + 0.1f);

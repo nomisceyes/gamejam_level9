@@ -7,10 +7,11 @@ public class Unit : MonoBehaviour
     public int FavorValue = 5;
 
     public SpriteRenderer SpriteRenderer;
-
+    public Animator Animator;
+    
     public float WalkSpeed = 3f;
     public Vector2[] Waypoints;
-
+    
     private BoxCollider2D _collider;
     private Vector3 _lastPosition;
     private Color _originalColor;
@@ -24,6 +25,8 @@ public class Unit : MonoBehaviour
 
         if (Waypoints == null || Waypoints.Length == 0)
             GenerateRandomWaypoints();
+        
+        Animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -114,7 +117,10 @@ public class Unit : MonoBehaviour
 
     public void Sacrifice()
     {
+        Animator.SetTrigger("Sacrifice");
         UnitSpawner.Instance.UnitDie();
-        Destroy(gameObject);
+        Destroy(gameObject, 0.6f);
+        
+        G.AudioManager.PlaySound(R.Audio.UnitDieSound);
     }
 }

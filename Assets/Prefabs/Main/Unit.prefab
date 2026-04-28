@@ -178,6 +178,7 @@ MonoBehaviour:
   BloodValue: 7
   FavorValue: 3
   SpriteRenderer: {fileID: 8136575645747106288}
+  Animator: {fileID: 0}
   WalkSpeed: 2
   Waypoints: []
   IsGrabbed: 0

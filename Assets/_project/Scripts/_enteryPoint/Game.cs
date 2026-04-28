@@ -38,6 +38,9 @@ public class Game : MonoBehaviour
     {
         if (_isStop == false)
             WinLoseCondition();
+        
+        if(Input.GetMouseButtonDown(0))
+            G.AudioManager.PlaySound(R.Audio.MouseClickSound);
     }
 
     public void WinLoseCondition()
@@ -46,6 +49,7 @@ public class Game : MonoBehaviour
         {
             LogSystem.Instance.LogGameEnd(false);
             ResoultHandler.Instance.ShowResoult(false);
+            G.AudioManager.PlaySound(R.Audio.LoseSound);
             _isStop = true;
         }
         else if (Totem.CurrentFavor >= Totem.MinFavorForWin && Health.Instance.CurrentHealth > 0)
