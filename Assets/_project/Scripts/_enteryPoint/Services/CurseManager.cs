@@ -55,6 +55,7 @@ public class CurseManager : MonoBehaviour, IService
         _activeCurses.Add(newCurse);
         OnCurseAdded?.Invoke(newCurse);
 
+        ShakeEffect.Instance.PlayHorrorEffect();
         LogSystem.Instance.LogCurseApplied(newCurse.DisplayName, newCurse.Description, duration);
     }
 

@@ -7,13 +7,10 @@ public class CameraController : MonoBehaviour
     public Vector2 MoveBoundsMin = new Vector2(-10f, -10f);
     public Vector2 MoveBoundsMax = new Vector2(10f, 10f);
 
-    private Camera _camera;
     private Vector2 _moveInput;
-    
+
     private void Start()
     {
-        _camera = G.Game.MainCamera;
-        
         G.Game.InputSystem.Player.Move.performed += OnMove;
         G.Game.InputSystem.Player.Move.canceled += OnMove;
     }
