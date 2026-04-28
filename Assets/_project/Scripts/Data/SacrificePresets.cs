@@ -14,7 +14,7 @@
         Name = "Gold",
         Type = ResourceType.Gold,
         BasePower = 15,
-        FavorChange = 12,
+        FavorChange = 7,
         Cost = new[] { new ResourceCost { Type = ResourceType.Gold, Amount = 10 } }
     };
     
@@ -23,10 +23,7 @@
         Name = "Blood",
         Type = ResourceType.Blood,
         BasePower = 35,
-        FavorChange = 15,
-        Cost = new[]
-        {
-            new ResourceCost {Type = ResourceType.Blood, Amount = 10}
-        },
+        FavorChange = 10,
+        Cost = new[] { new ResourceCost {Type = ResourceType.Blood, Amount = 10} }
     };
 }

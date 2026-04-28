@@ -6,7 +6,7 @@ public class Totem : MonoBehaviour
 {
     [Header("Balance Settings")] public float CurrentFavor = 50;
     public int MaxFavor = 100;
-    public int MinFavorForWin = 85;
+    public int MinFavorForWin = 100;
     public int MinFavorForLose = 0;
     public float FavorDecayRate = 0.5f;
 

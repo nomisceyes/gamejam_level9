@@ -92,7 +92,7 @@ public class Reticle : MonoBehaviour
                 _grabbedUnit = unit;
                 _grabbedUnit.OnGrabbed();
 
-                Debug.Log($"Захвачен юнит: {_grabbedUnit.villagerName}");
+                Debug.Log($"Захвачен юнит: {_grabbedUnit.Name}");
             }
         }
     }

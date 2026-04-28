@@ -81,5 +81,6 @@ public class Game : MonoBehaviour
     public void RepeatGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        G.ResourceManager.ResetResource();
     }
 }

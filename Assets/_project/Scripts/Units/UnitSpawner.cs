@@ -8,7 +8,7 @@ public class UnitSpawner : MonoBehaviour
     public GameObject UnitPrefab;
     public Transform[] SpawnPoints;
     public int MaxVillagers = 5;
-    public float SpawnDelay = 10f;
+    public float SpawnDelay = 30f;
     
     private int _currentVillagers = 0;
     private float _spawnTimer = 0f;
@@ -23,7 +23,6 @@ public class UnitSpawner : MonoBehaviour
     
     private void Start()
     {
-        // Спавним начальных крестьян
         for (int i = 0; i < MaxVillagers; i++)
         {
             SpawnUnit();
@@ -52,15 +51,6 @@ public class UnitSpawner : MonoBehaviour
         
         GameObject newUnit = Instantiate(UnitPrefab, spawnPoint.position, Quaternion.identity);
         _currentVillagers++;
-        
-        // Подписываемся на уничтожение
-        Unit unit = newUnit.GetComponent<Unit>();
-        if (unit != null)
-        {
-            // Можно добавить событие при смерти
-        }
-        
-        LogSystem.Instance?.AddLog($"Новый крестьянин появился в деревне", Color.white, "👨‍🌾");
     }
     
     private Transform GetRandomSpawnPoint()
@@ -71,7 +61,7 @@ public class UnitSpawner : MonoBehaviour
         return SpawnPoints[Random.Range(0, SpawnPoints.Length)];
     }
     
-    public void OnVillagerDied()
+    public void UnitDie()
     {
         _currentVillagers--;
     }

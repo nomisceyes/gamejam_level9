@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class BloodAltar : Building
 {
@@ -8,37 +7,31 @@ public class BloodAltar : Building
     public Light AltarLight;
     public AudioSource SacrificeSound;
     
-    public int BloodPerSacrifice = 5;  
-    public int HealthCostPerUse = 10;
-    
-    public Button collectBloodButton;
+    // public int BloodPerSacrifice = 5;  
+    // public int HealthCostPerUse = 10;
     
     private void Start()
     {
         ResourceType = ResourceType.Blood;
         //BaseGatherPerSecond = 0f; 
         AutoGather = false;
-        
-        if (collectBloodButton != null)
-            collectBloodButton.onClick.AddListener(CollectBloodManually);
     }
 
-    public void CollectBloodManually()
-    {
-        if (Health.Instance.HasEnoughHealth(HealthCostPerUse) == false)
-        {
-            Debug.Log($"❌ Не хватает здоровья! Нужно {HealthCostPerUse} HP");
-            return;
-        }
-
-        Health.Instance.TakeDamage(HealthCostPerUse);
-        G.ResourceManager.AddResource(ResourceType.Blood, BloodPerSacrifice);
-        G.Game.Totem.MakeSacrifice(SacrificePresets.Blood);
-        
-        Debug.Log($"🩸 Пожертвовано {HealthCostPerUse} HP → получено {BloodPerSacrifice} крови");
-        
-        ShowBloodCollectionEffect();
-    }
+    // public void CollectBloodManually()
+    // {
+    //     if (Health.Instance.HasEnoughHealth(HealthCostPerUse) == false)
+    //     {
+    //         Debug.Log($"❌ Не хватает здоровья! Нужно {HealthCostPerUse} HP");
+    //         return;
+    //     }
+    //     
+    //     G.ResourceManager.AddResource(ResourceType.Blood, BloodPerSacrifice);
+    //     G.Game.Totem.MakeSacrifice(SacrificePresets.Blood);
+    //     
+    //     Debug.Log($"🩸 Пожертвовано {HealthCostPerUse} HP → получено {BloodPerSacrifice} крови");
+    //     
+    //     ShowBloodCollectionEffect();
+    // }
     
     public void SacrificeUnit(Unit unit)
     {
@@ -48,7 +41,7 @@ public class BloodAltar : Building
         G.ResourceManager.AddResource(ResourceType.Blood, unit.BloodValue);
         G.Game.Totem.CurrentFavor += unit.FavorValue;
 
-        LogSystem.Instance.AddLog($"Жертва - {unit.villagerName}: получено {unit.BloodValue} крови, {unit.FavorValue} благосклонности", Color.brown);
+        LogSystem.Instance.AddLog($"Жертва - {unit.Name}: получено {unit.BloodValue} крови, {unit.FavorValue} благосклонности", Color.brown);
         
         // Эффекты
         if (BloodParticles != null)
@@ -88,14 +81,14 @@ public class BloodAltar : Building
         AltarLight.intensity = originalIntensity;
     }
     
-    private void ShowBloodCollectionEffect()
-    {
-        GetComponent<SpriteRenderer>().color = Color.red;
-        Invoke(nameof(ResetColor), 0.3f);
-    }
-    
-    private void ResetColor()
-    {
-        GetComponent<SpriteRenderer>().color = Color.white;
-    }
+    // private void ShowBloodCollectionEffect()
+    // {
+    //     GetComponent<SpriteRenderer>().color = Color.red;
+    //     Invoke(nameof(ResetColor), 0.3f);
+    // }
+    //
+    // private void ResetColor()
+    // {
+    //     GetComponent<SpriteRenderer>().color = Color.white;
+    // }
 }

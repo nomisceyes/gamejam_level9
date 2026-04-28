@@ -13,9 +13,9 @@ public class ResourceManager : MonoBehaviour, IService
         foreach (ResourceType type in Enum.GetValues(typeof(ResourceType)))
             Resources[type] = 0;
 
-        Resources[ResourceType.Food] = 40;
-        Resources[ResourceType.Gold] = 30;
-        Resources[ResourceType.Blood] = 15;
+        Resources[ResourceType.Food] = 20;
+        Resources[ResourceType.Gold] = 20;
+        Resources[ResourceType.Blood] = 0;
     }
 
     public void AddResource(ResourceType type, int amount)
@@ -51,4 +51,14 @@ public class ResourceManager : MonoBehaviour, IService
 
     public int GetResource(ResourceType type) =>
         Resources[type];
+
+    public void ResetResource()
+    {
+        Resources[ResourceType.Food] = 20;
+        Resources[ResourceType.Gold] = 20;
+        Resources[ResourceType.Blood] = 0;
+
+        foreach (var type in Enum.GetValues(typeof(ResourceType)))
+            OnResourceChanged?.Invoke((ResourceType)type);
+    }
 }
