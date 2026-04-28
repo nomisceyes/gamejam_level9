@@ -16,9 +16,9 @@ public class Totem : MonoBehaviour
     private float _maxPenalty = 0.3f;
     private float _decayTimer = 0f;
 
-    private Queue<ResourceType> _recentSacrifices = new ();
-    private Dictionary<ResourceType, int> _repetitionCount = new ();
-    
+    private Queue<ResourceType> _recentSacrifices = new();
+    private Dictionary<ResourceType, int> _repetitionCount = new();
+
     public event Action OnFavorChange;
 
     private void Update()
@@ -56,18 +56,50 @@ public class Totem : MonoBehaviour
             string message = repetitionModifier < 0.5f
                 ? "Господин устал от однообразных жертв! Благосклонность снижена!"
                 : "Господин скучает... Попробуй другую жертву";
-            
+
             LogSystem.Instance.AddLog(message, Color.yellow);
         }
-
-        if (G.CurseManager.IsCurseActive("thirst") && sacrifice.Type != ResourceType.Blood)
+        
+        if (G.CurseManager.IsCurseActive("thirst") && sacrifice.Type == ResourceType.Health)
         {
-            Debug.Log("Curse of Thirst! The totem demands blood.");
+            int healthCost = 10;
+
+            if (Health.Instance.CurrentHealth >= healthCost)
+            {
+                Health.Instance.TakeDamage(healthCost);
+                LogSystem.Instance.AddLog($"Ты утолил жажду Господина своей кровью! -{healthCost} HP", Color.green);
+            }
+            else
+            {
+                CurrentFavor -= 30;
+                LogSystem.Instance.AddLog($"У тебя недостаточно здоровья для жертвы! ", Color.red);
+            }
+
+            OnFavorChange?.Invoke();
+            G.CurseManager.RemoveCurseByName("thirst");
+
+            // if (Health.Instance.CurrentHealth >= healthCost)
+            // {
+            //     Health.Instance.TakeDamage(healthCost);
+            //     LogSystem.Instance.AddLog($"Ты утолил жажду Господина своей кровью! -{healthCost} HP", Color.green);
+            // }
+            // else
+            // {
+            //     CurrentFavor -= 15;
+            //     LogSystem.Instance.AddLog($"Жажда Господина не утолена! Тебе не хватило здоровья! -15 благосклонности", Color.red);
+            //     OnFavorChange?.Invoke();
+            // }
+            //
+            // G.CurseManager.RemoveCurseByName("thirst");
+            // return;
+        }
+        else if(G.CurseManager.IsCurseActive("thirst") && sacrifice.Type != ResourceType.Health)
+        {
             CurrentFavor -= 15;
             OnFavorChange?.Invoke();
             G.CurseManager.RemoveCurseByName("thirst");
-            return;
         }
+
 
         float powerModifier = G.CurseManager.GetModifier("sacrifice_power");
         int finalPower = Mathf.FloorToInt(sacrifice.BasePower * powerModifier);
@@ -96,30 +128,30 @@ public class Totem : MonoBehaviour
     private float CalculateRepetitionModifier(ResourceType sacrificeType)
     {
         if (_repetitionCount.ContainsKey(sacrificeType) == false) return 1f;
-        
+
         int count = _repetitionCount[sacrificeType];
-        
+
         if (count == 1) return 0.9f;
         if (count == 2) return 0.7f;
         if (count >= 3) return 0.5f;
-        
+
         return 1f;
     }
 
     private void AddSacrificeToHistory(ResourceType sacrificeType)
     {
         _recentSacrifices.Enqueue(sacrificeType);
-        
+
         if (!_repetitionCount.ContainsKey(sacrificeType))
             _repetitionCount[sacrificeType] = 0;
-        
+
         _repetitionCount[sacrificeType]++;
-        
+
         if (_recentSacrifices.Count > _maxSacrificesHistory)
         {
             ResourceType oldest = _recentSacrifices.Dequeue();
             _repetitionCount[oldest]--;
-            
+
             if (_repetitionCount[oldest] <= 0)
                 _repetitionCount.Remove(oldest);
         }
@@ -139,4 +171,7 @@ public class Totem : MonoBehaviour
         CurrentFavor -= amount;
         OnFavorChange?.Invoke();
     }
+    
+    public void UpdateUI() =>
+        OnFavorChange?.Invoke();
 }

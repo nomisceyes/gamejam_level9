@@ -8,5 +8,6 @@ public class SacrificeData
     public int BasePower;
     public int FavorChange;
     public ResourceCost[] Cost;
+    public int HealthCost;
     public Action Action;
 }

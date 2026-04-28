@@ -36,7 +36,7 @@ public class CurseManager : MonoBehaviour, IService
             existing.RemainingTime = Mathf.Max(existing.RemainingTime, duration);
 
             LogSystem.Instance.AddLog($"Проклятие {existing.DisplayName} продлено до {duration} сек",
-                Color.yellow, "⏰");
+                Color.yellow);
             
             return;
         }

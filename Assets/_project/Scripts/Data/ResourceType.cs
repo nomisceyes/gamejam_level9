@@ -3,4 +3,5 @@
     Food,
     Gold,
     Blood,
+    Health
 }

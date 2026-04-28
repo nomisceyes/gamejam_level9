@@ -88,9 +88,9 @@ public class TrialChoicePopup : MonoBehaviour
         
         _onChoiceMade?.Invoke(false);
         
-        LogSystem.Instance.AddLog("Ты отказался от испытания! Господин гневается и желает твоей крови!", Color.red, "😨");
+        LogSystem.Instance.AddLog("Ты отказался от испытания! Господин гневается и желает твоей крови!", Color.red);
         G.ResourceManager.RemoveResource(ResourceType.Blood, 15);
-        Health.Instance.TakeDamage(10);
+        Health.Instance.TakeDamage(5);
     }
     
     private void ShowTrialResult(bool success)
@@ -101,14 +101,14 @@ public class TrialChoicePopup : MonoBehaviour
         {
             ApplyVictoryReward();
             LogSystem.Instance.AddLog($"ПОБЕДА в испытании! +{GetRewardText(_currentSacrificeType)} {GetResourceName(_currentSacrificeType)}", 
-                                       Color.green, "🏆");
+                                       Color.green);
         }
         else
         {
             string curseId = GetRandomCurse();
             ApplyDefeatPenalty(curseId);
             LogSystem.Instance.AddLog($"ПОРАЖЕНИЕ в испытании! {GetDefeatPenaltyText(_currentSacrificeType, curseId)}", 
-                                       Color.red, "💀");
+                                       Color.red);
         }
     }
     
@@ -231,19 +231,19 @@ public class TrialChoicePopup : MonoBehaviour
         }
     }
 
-    private string GetRandomCurse()
-    {
-        string[] curces = { "rot" ,"eye","thirst","time_slow","greed"};
-        int randomCurse = Random.Range(0, curces.Length);
-        
-        return curces[randomCurse];
-    }
-    
     // private string GetRandomCurse()
     // {
-    //     string[] curces = { "eye"};
+    //     string[] curces = { "rot" ,"eye","thirst","time_slow","greed"};
     //     int randomCurse = Random.Range(0, curces.Length);
     //     
     //     return curces[randomCurse];
     // }
+    
+    private string GetRandomCurse()
+    {
+        string[] curces = { "thirst"};
+        int randomCurse = Random.Range(0, curces.Length);
+        
+        return curces[randomCurse];
+    }
 }

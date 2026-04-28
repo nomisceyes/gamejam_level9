@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class LogSystem : MonoBehaviour
 {
-     public static LogSystem Instance { get; private set; }
+    public static LogSystem Instance { get; private set; }
     
     [Header("UI")]
     public Transform LOGContainer;
@@ -33,13 +33,13 @@ public class LogSystem : MonoBehaviour
         AddLog("Добро пожаловать. Тотем ждёт твоих жертв...", _neutralColor);
     }
     
-    public void AddLog(string message, Color color, string icon = "📜")
+    public void AddLog(string message, Color color)
     {
         GameObject newEntry = Instantiate(LOGEntryPrefab, LOGContainer);
         Text textComponent = newEntry.GetComponent<Text>();
         
         string timestamp = System.DateTime.Now.ToString("HH:mm:ss");
-        textComponent.text = $"[{timestamp}] {icon} {message}";
+        textComponent.text = $"[{timestamp}] {message}";
         textComponent.color = color;
         
         logEntries.Enqueue(newEntry);
@@ -50,20 +50,20 @@ public class LogSystem : MonoBehaviour
             Destroy(oldest);
         }
         
-        StartCoroutine(AutoScroll());
+       StartCoroutine(AutoScroll());
     }
     
     public void LogSacrifice(string resourceName, float favorChange)
     {
         if (favorChange > 0)
         {
-            AddLog($"Ты принёс в жертву {resourceName}. Тотем доволен! +{favorChange} благосклонности", 
-                   _positiveColor, "🩸");
+            AddLog($"Ты принёс в жертву {resourceName}. Господин доволен! +{favorChange} благосклонности", 
+                   _positiveColor);
         }
         else
         {
-            AddLog($"Ты принёс в жертву {resourceName}. Тотем разочарован. {favorChange} благосклонности", 
-                   _negativeColor, "😞");
+            AddLog($"Ты принёс в жертву {resourceName}. Господин разочарован. {favorChange} благосклонности", 
+                   _negativeColor);
         }
     }
     
@@ -71,48 +71,48 @@ public class LogSystem : MonoBehaviour
     {
         if (success)
         {
-            AddLog($"Испытание пройдено! Ваше пожертвование достаточно: {power} > {enemyPower}. Тотем вознаграждает тебя!", 
-                   _positiveColor, "⚔️");
+            AddLog($"Испытание пройдено! Ваше пожертвование достаточно: {power} > {enemyPower}. Господин вознаграждает тебя!", 
+                   _positiveColor);
         }
         else
         {
-            AddLog($"Испытание провалено! Ценность вашего пожертвования слишком мала: {power} ≤ {enemyPower}. Тотем насылает проклятие!", 
-                   _negativeColor, "💀");
+            AddLog($"Испытание провалено! Ценность вашего пожертвования слишком мала: {power} ≤ {enemyPower}. Господин насылает проклятие!", 
+                   _negativeColor);
         }
     }
     
     public void LogCurseApplied(string curseName, string description, float duration)
     {
         AddLog($"ПРОКЛЯТИЕ: {curseName} - {description} (на {duration} сек)", 
-               _curseColor, "🌿");
+               _curseColor);
     }
     
     public void LogCurseExpired(string curseName)
     {
-        AddLog($"Проклятие {curseName} исчезло.", _neutralColor, "✨");
+        AddLog($"Проклятие {curseName} исчезло.", _neutralColor);
     }
     
     public void LogFavorChange(float oldFavor, float newFavor)
     {
         float delta = newFavor - oldFavor;
         if (delta > 0)
-            AddLog($"Благосклонность тотема повысилась до {newFavor} (+{delta})", _positiveColor, "📈");
+            AddLog($"Благосклонность Господин повысилась до {newFavor} (+{delta})", _positiveColor);
         else if (delta < 0)
-            AddLog($"Благосклонность тотема упала до {newFavor} ({delta})", _negativeColor, "📉");
+            AddLog($"Благосклонность Господин упала до {newFavor} ({delta})", _negativeColor);
     }
     
     public void LogGameEnd(bool isWin)
     {
         if (Health.Instance.CurrentHealth <= 0)
         {
-            AddLog("Вы погибли, не успев призвать своего господина.", _negativeColor, "💀");
+            AddLog("Вы погибли, не успев призвать своего господина.", _negativeColor);
             return;
         }
 
         if (isWin)
-            AddLog("Тотем ликует! Ты достиг просветления. ПОБЕДА!", _positiveColor, "🏆");
+            AddLog("Тотем ликует! Ты достиг просветления. ПОБЕДА!", _positiveColor);
         else
-            AddLog("Тотем уничтожил деревню. Ты не смог его умилостивить. ПОРАЖЕНИЕ!", _negativeColor, "💀");
+            AddLog("Тотем уничтожил деревню. Ты не смог его умилостивить. ПОРАЖЕНИЕ!", _negativeColor);
     }
     
     private IEnumerator AutoScroll()

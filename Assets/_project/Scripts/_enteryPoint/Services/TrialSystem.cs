@@ -28,11 +28,11 @@ public class TrialSystem : MonoBehaviour, IService
     {
         if (accepted)
         {
-            LogSystem.Instance.AddLog("Ты принял вызов тотема!", Color.white, "⚔️");
+            LogSystem.Instance.AddLog("Ты принял вызов тотема!", Color.white);
         }
         else
         {
-            LogSystem.Instance.AddLog("Ты отказался от испытания. Тотем разгневан!", Color.red, "😨");
+            LogSystem.Instance.AddLog("Ты отказался от испытания. Тотем разгневан!", Color.red);
         }
     }
 
