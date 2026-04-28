@@ -3,7 +3,7 @@ using UnityEngine;
 public class UnitSpawner : MonoBehaviour
 {
     public static UnitSpawner Instance;
-    
+
     [Header("Настройки спавна")]
     public GameObject UnitPrefab;
     public Transform[] SpawnPoints;
@@ -26,7 +26,7 @@ public class UnitSpawner : MonoBehaviour
         // Спавним начальных крестьян
         for (int i = 0; i < MaxVillagers; i++)
         {
-            SpawnVillager();
+            SpawnUnit();
         }
     }
     
@@ -38,23 +38,23 @@ public class UnitSpawner : MonoBehaviour
             if (_spawnTimer >= SpawnDelay)
             {
                 _spawnTimer = 0f;
-                SpawnVillager();
+                SpawnUnit();
             }
         }
     }
     
-    public void SpawnVillager()
+    public void SpawnUnit()
     {
         if (_currentVillagers >= MaxVillagers) return;
         
         Transform spawnPoint = GetRandomSpawnPoint();
         if (spawnPoint == null) return;
         
-        GameObject newVillager = Instantiate(UnitPrefab, spawnPoint.position, Quaternion.identity);
+        GameObject newUnit = Instantiate(UnitPrefab, spawnPoint.position, Quaternion.identity);
         _currentVillagers++;
         
         // Подписываемся на уничтожение
-        Unit unit = newVillager.GetComponent<Unit>();
+        Unit unit = newUnit.GetComponent<Unit>();
         if (unit != null)
         {
             // Можно добавить событие при смерти

@@ -9,10 +9,21 @@ public class Game : MonoBehaviour
 
     public GameObject[] buttons;
     public bool IsPaused = false;
+    public InputSystem InputSystem;
+    public Camera MainCamera;
 
     private void Awake()
     {
         G.Game = this;
+        
+        InputSystem = new InputSystem();
+        InputSystem.Enable();
+        MainCamera = Camera.main;
+    }
+
+    private void OnDisable()
+    {
+         InputSystem.Disable();
     }
 
     private void Start()

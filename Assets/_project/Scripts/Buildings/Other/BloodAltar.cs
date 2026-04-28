@@ -47,20 +47,20 @@ public class BloodAltar : Building
         // Награда
         G.ResourceManager.AddResource(ResourceType.Blood, unit.BloodValue);
         G.Game.Totem.CurrentFavor += unit.FavorValue;
+
+        LogSystem.Instance.AddLog($"Жертва - {unit.villagerName}: получено {unit.BloodValue} крови, {unit.FavorValue} благосклонности", Color.brown);
         
-        // Логи
-        LogSystem.Instance?.AddLog(
-            $"Жертва! {unit.villagerName} принесён в жертву. +{unit.BloodValue} крови, +{unit.FavorValue} благосклонности", 
-            Color.red, "🩸");
+        // Эффекты
+        if (BloodParticles != null)
+            BloodParticles.Play();
         
-        // Визуальные эффекты
-        ShowSacrificeEffect();
+        if (AltarLight != null)
+            StartCoroutine(FlickerLight());
         
         // Уничтожаем крестьянина
         unit.Sacrifice();
         
-        // Спавним нового крестьянина
-        UnitSpawner.Instance?.SpawnVillager();
+        UnitSpawner.Instance?.SpawnUnit();
     }
     
     private void ShowSacrificeEffect()
@@ -86,17 +86,6 @@ public class BloodAltar : Building
         AltarLight.intensity = 3f;
         yield return new WaitForSeconds(0.2f);
         AltarLight.intensity = originalIntensity;
-    }
-    
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        Unit unit = other.GetComponent<Unit>();
-        if (unit != null && unit.IsDragging == false)
-        {
-            // Притягиваем крестьянина к алтарю
-            Vector2 direction = (transform.position - unit.transform.position).normalized;
-            unit.transform.Translate(direction * 2f * Time.deltaTime);
-        }
     }
     
     private void ShowBloodCollectionEffect()
