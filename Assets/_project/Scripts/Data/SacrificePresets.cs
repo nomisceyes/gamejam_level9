@@ -1,26 +1,24 @@
-﻿using UnityEngine;
-
-public static class SacrificePresets
+﻿public static class SacrificePresets
 {
-    public static SacrificeData Food = new SacrificeData
+    public static readonly SacrificeData Food = new()
     {
         Name = "Food",
         Type = ResourceType.Food,
         BasePower = 10,
         FavorChange = 5,
-        Cost = new[] { new ResourceCost {Type = ResourceType.Food, Amount = 20}}
+        Cost = new[] { new ResourceCost {Type = ResourceType.Food, Amount = 8}}
     };
 
-    public static SacrificeData Gold = new SacrificeData
+    public static readonly SacrificeData Gold = new()
     {
         Name = "Gold",
         Type = ResourceType.Gold,
         BasePower = 15,
-        FavorChange = 8,
-        Cost = new[] { new ResourceCost { Type = ResourceType.Gold, Amount = 25 } }
+        FavorChange = 12,
+        Cost = new[] { new ResourceCost { Type = ResourceType.Gold, Amount = 10 } }
     };
     
-    public static SacrificeData Blood = new SacrificeData
+    public static readonly SacrificeData Blood = new()
     {
         Name = "Blood",
         Type = ResourceType.Blood,
@@ -28,13 +26,7 @@ public static class SacrificePresets
         FavorChange = 15,
         Cost = new[]
         {
-            new ResourceCost {Type = ResourceType.Blood, Amount = 30}
+            new ResourceCost {Type = ResourceType.Blood, Amount = 10}
         },
-        
-        Action = () =>
-        {
-            Health.Instance.TakeDamage(10);
-            Debug.Log("Вы пожертвовали здоровьем");
-        }
     };
 }

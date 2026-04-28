@@ -13,9 +13,6 @@ public class LogSystem : MonoBehaviour
     public ScrollRect ScrollRect;
     public int MaxLogEntries = 50;
     
-    [Header("Настройки")]
-    public float AutoScrollDelay = 0.1f;
-    
     private Queue<GameObject> logEntries = new Queue<GameObject>();
     
     private readonly Color _positiveColor = new Color(0.2f, 0.8f, 0.2f);
@@ -95,18 +92,6 @@ public class LogSystem : MonoBehaviour
         AddLog($"Проклятие {curseName} исчезло.", _neutralColor, "✨");
     }
     
-    // public void LogResourceGain(ResourceType type, int amount)
-    // {
-        // string icon = type switch
-        // {
-            // ResourceType.Food => "🌾",
-            // ResourceType.Gold => "💰",
-            // ResourceType.Blood => "🩸",
-            // _ => "📦"
-        // };
-        // AddLog($"Получено +{amount} {type}", _positiveColor, icon);
-    // }
-    
     public void LogFavorChange(float oldFavor, float newFavor)
     {
         float delta = newFavor - oldFavor;
@@ -118,6 +103,12 @@ public class LogSystem : MonoBehaviour
     
     public void LogGameEnd(bool isWin)
     {
+        if (Health.Instance.CurrentHealth <= 0)
+        {
+            AddLog("Вы погибли, не успев призвать своего господина.", _negativeColor, "💀");
+            return;
+        }
+
         if (isWin)
             AddLog("Тотем ликует! Ты достиг просветления. ПОБЕДА!", _positiveColor, "🏆");
         else

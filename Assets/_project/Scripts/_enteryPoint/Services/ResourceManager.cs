@@ -13,9 +13,9 @@ public class ResourceManager : MonoBehaviour, IService
         foreach (ResourceType type in Enum.GetValues(typeof(ResourceType)))
             Resources[type] = 0;
 
-        Resources[ResourceType.Food] = 3000;
-        Resources[ResourceType.Gold] = 5000;
-        Resources[ResourceType.Blood] = 3000;
+        Resources[ResourceType.Food] = 40;
+        Resources[ResourceType.Gold] = 30;
+        Resources[ResourceType.Blood] = 15;
     }
 
     public void AddResource(ResourceType type, int amount)
@@ -28,11 +28,8 @@ public class ResourceManager : MonoBehaviour, IService
 
     public void RemoveResource(ResourceType type, int amount)
     {
-        if (amount > 0)
-        {
-            Resources[type] -= amount;
-            OnResourceChanged?.Invoke(type);
-        }
+        Resources[type] = Mathf.Max(0, Resources[type] - amount);
+        OnResourceChanged?.Invoke(type);
     }
 
     public bool SpendResource(ResourceCost[] costs)
@@ -45,7 +42,7 @@ public class ResourceManager : MonoBehaviour, IService
 
         foreach (var cost in costs)
         {
-            Resources[cost.Type] -= cost.Amount;
+            Resources[cost.Type] = Mathf.Max(0, Resources[cost.Type] - cost.Amount);
             OnResourceChanged?.Invoke(cost.Type);
         }
 

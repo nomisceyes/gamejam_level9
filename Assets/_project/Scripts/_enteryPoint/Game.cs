@@ -1,9 +1,14 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {
     public Totem Totem;
     private bool _isStop = false;
+
+    public GameObject[] buttons;
+    public bool IsPaused = false;
 
     private void Awake()
     {
@@ -29,14 +34,41 @@ public class Game : MonoBehaviour
         if (Health.Instance.CurrentHealth <= 0 || Totem.CurrentFavor <= Totem.MinFavorForLose)
         {
             LogSystem.Instance.LogGameEnd(false);
-            Debug.Log("Вы пребали");
+            ResoultHandler.Instance.ShowResoult(false);
             _isStop = true;
         }
         else if (Totem.CurrentFavor >= Totem.MinFavorForWin && Health.Instance.CurrentHealth > 0)
         {
             LogSystem.Instance.LogGameEnd(true);
-            Debug.Log("Вы победили");
+            ResoultHandler.Instance.ShowResoult(true);
             _isStop = true;
         }
+    }
+
+    public void SetUIInteractable(bool interactable)
+    {
+        foreach (GameObject button in buttons)
+        {
+            Button btn = button.GetComponent<Button>();
+            if(btn != null)
+                btn.interactable = interactable;
+        }
+    }
+
+    public void PausedGame()
+    {
+        IsPaused = true;
+        SetUIInteractable(false);
+    }
+
+    public void UnPausedGame()
+    {
+        IsPaused = false;
+        SetUIInteractable(true);
+    }
+
+    public void RepeatGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

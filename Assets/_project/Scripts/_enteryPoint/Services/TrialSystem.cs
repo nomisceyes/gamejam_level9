@@ -12,6 +12,7 @@ public class TrialSystem : MonoBehaviour, IService
         int sacrificeCount = GetSacrificeCount();
         int index = Mathf.Clamp(sacrificeCount / 3, 0, TrialChances.Length - 1);
         float chance = TrialChances[index];
+        Debug.Log(chance);
 
         if (Random.value > chance)
         {

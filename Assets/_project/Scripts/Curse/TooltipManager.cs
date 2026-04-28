@@ -8,16 +8,12 @@ public class TooltipManager : MonoBehaviour, IService
     public GameObject TooltipPanel;
     public Text TooltipTitle;
     public Text TooltipDescription;
-    //public Text TooltipTimer;
-
-    public Vector2 Offset = new Vector2(20f, -20f);
     public float DelayBeforeShow = 0.2f;
 
     private Curse _pendingCurse;
     private RectTransform _targetIcon;
     private float _currentDelay = 0f;
     private bool _isHovering = false;
-    private bool _isVisible = false;
 
     public void Init()
     {
@@ -44,13 +40,12 @@ public class TooltipManager : MonoBehaviour, IService
 
     private void Update()
     {
-        if (_isHovering && _pendingCurse != null)
+        if (_isHovering && _pendingCurse != null && G.Game.IsPaused == false)
         {
             _currentDelay += Time.deltaTime;
             if (_currentDelay >= DelayBeforeShow)
             {
                 ShowTooltipImmediately(_pendingCurse);
-                _isVisible = true;
                 _isHovering = false;
             }
         }
@@ -99,7 +94,6 @@ public class TooltipManager : MonoBehaviour, IService
         _pendingCurse = null;
         _targetIcon = null;
         _currentDelay = 0f;
-        _isVisible = false;
 
         if (TooltipPanel != null)
             TooltipPanel.SetActive(false);

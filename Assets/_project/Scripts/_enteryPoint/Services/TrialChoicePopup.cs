@@ -18,11 +18,10 @@ public class TrialChoicePopup : MonoBehaviour
     public Button AcceptButton;
     public Button RefuseButton;
     
-    // Текущие данные испытания
     private int _currentSacrificePower;
     private int _currentEnemyPower;
     private ResourceType _currentSacrificeType;
-    private Action<bool> _onChoiceMade; // true = принял, false = отказался
+    private Action<bool> _onChoiceMade; 
     
     private void Awake()
     {
@@ -42,29 +41,28 @@ public class TrialChoicePopup : MonoBehaviour
     
     public void Show(int sacrificePower, int enemyPower, ResourceType type, System.Action<bool> callback)
     {
+        G.Game.PausedGame();
+        
         _currentSacrificePower = sacrificePower;
         _currentEnemyPower = enemyPower;
         _currentSacrificeType = type;
         _onChoiceMade = callback;
         
-        // Рассчитываем шанс победы
         float winChance = CalculateWinChance(sacrificePower, enemyPower);
         int winChancePercent = Mathf.RoundToInt(winChance * 100);
         
-        // Заполняем UI
-        TitleText.text = "⚔️ ИСПЫТАНИЕ ТОТЕМА ⚔️";
+        TitleText.text = "⚔️ИСПЫТАНИЕ ГОСПОДИНА ⚔️";
         SacrificePowerText.text = $"Твоя сила: {sacrificePower}";
         EnemyPowerText.text = $"Сила врага: {enemyPower}";
         
         WinChanceText.text = $"Шанс победы: {winChancePercent}%";
         WinChanceText.color = winChance >= 0.5f ? Color.green : Color.red;
         
-        // Риски и награды
         string rewardText = GetRewardText(type);
         string penaltyText = GetPenaltyText(type);
-        RiskRewardText.text = $"✅Победа: {rewardText}\n❌ Поражение: {penaltyText} + проклятие";
+        RiskRewardText.text = $"✅ Победа: {rewardText}\n❌ Поражение: {penaltyText} + проклятие";
         
-        RefusalPenaltyText.text = $"⚠️Отказ: -{GetRefusalCost(type)} {GetResourceName(type)} + проклятие";
+        RefusalPenaltyText.text = $"⚠Отказ: -{GetRefusalCost(type)} {GetResourceName(type)} + проклятие";
         RefusalPenaltyText.color = Color.red;
         
         Panel.SetActive(true);
@@ -74,43 +72,39 @@ public class TrialChoicePopup : MonoBehaviour
     {
         Panel.SetActive(false);
         
-        // Рассчитываем результат испытания
         float winChance = CalculateWinChance(_currentSacrificePower, _currentEnemyPower);
         bool success = Random.value < winChance;
         
-        _onChoiceMade?.Invoke(true); // true = прошёл испытание
-        
-        // Показываем результат
+        _onChoiceMade?.Invoke(true);
         ShowTrialResult(success);
     }
     
     private void RefuseTrial()
     {
         Panel.SetActive(false);
+        G.Game.UnPausedGame();
         
-        // Отказ = штраф
         ApplyRefusalPenalty();
         
-        _onChoiceMade?.Invoke(false); // false = отказался
+        _onChoiceMade?.Invoke(false);
         
-        // Показываем сообщение об отказе
-        LogSystem.Instance.AddLog("Ты отказался от испытания! Тотем гневается и желает твоей крови!", Color.red, "😨");
+        LogSystem.Instance.AddLog("Ты отказался от испытания! Господин гневается и желает твоей крови!", Color.red, "😨");
         G.ResourceManager.RemoveResource(ResourceType.Blood, 15);
         Health.Instance.TakeDamage(10);
     }
     
     private void ShowTrialResult(bool success)
     {
+        G.Game.UnPausedGame();
+        
         if (success)
         {
-            // Награда за победу
             ApplyVictoryReward();
             LogSystem.Instance.AddLog($"ПОБЕДА в испытании! +{GetRewardText(_currentSacrificeType)} {GetResourceName(_currentSacrificeType)}", 
                                        Color.green, "🏆");
         }
         else
         {
-            // Штраф за поражение
             string curseId = GetRandomCurse();
             ApplyDefeatPenalty(curseId);
             LogSystem.Instance.AddLog($"ПОРАЖЕНИЕ в испытании! {GetDefeatPenaltyText(_currentSacrificeType, curseId)}", 
@@ -140,8 +134,7 @@ public class TrialChoicePopup : MonoBehaviour
                 G.ResourceManager.AddResource(ResourceType.Gold, 20);
                 break;
         }
-        
-        // Доп. бонус — немного благосклонности
+
         G.Game.Totem.CurrentFavor += 5;
     }
     
@@ -159,18 +152,13 @@ public class TrialChoicePopup : MonoBehaviour
                 G.ResourceManager.RemoveResource(ResourceType.Food, 10);
                 break;
         }
-        
-        // Накладываем проклятие
        
         G.CurseManager.ApplyCurse(curseId, 40f);
-        
-        // Тотем злится
         G.Game.Totem.FavorDecrease(10);
     }
     
     private void ApplyRefusalPenalty()
     {
-        // Отказ стоит дороже
         switch (_currentSacrificeType)
         {
             case ResourceType.Food:
@@ -184,10 +172,7 @@ public class TrialChoicePopup : MonoBehaviour
                 break;
         }
         
-        // Обязательное проклятие за отказ
         G.CurseManager.ApplyCurse(GetRandomCurse(), 30f);
-        
-        // Сильный гнев тотема
         G.Game.Totem.FavorDecrease(10);
     }
     
@@ -253,4 +238,12 @@ public class TrialChoicePopup : MonoBehaviour
         
         return curces[randomCurse];
     }
+    
+    // private string GetRandomCurse()
+    // {
+    //     string[] curces = { "eye"};
+    //     int randomCurse = Random.Range(0, curces.Length);
+    //     
+    //     return curces[randomCurse];
+    // }
 }

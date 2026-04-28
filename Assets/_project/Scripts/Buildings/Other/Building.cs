@@ -8,8 +8,7 @@ public class Building : MonoBehaviour
     public float BaseGatherTime = 2f;
     //public float BaseGatherPerSecond = 1f;
     public bool AutoGather = true;
-
-    private float _timer = 0f;
+    
     private float _currentProgress = 0f;
 
     private void Start()
@@ -24,7 +23,6 @@ public class Building : MonoBehaviour
             return;
 
         float curseModifier = G.CurseManager.GetModifier("gather_speed");
-        Debug.Log(curseModifier);
         float totemModifier = Totem.GetGatheringModifier();
         
         float gatherSpeed = 1f / BaseGatherTime * totemModifier * curseModifier;

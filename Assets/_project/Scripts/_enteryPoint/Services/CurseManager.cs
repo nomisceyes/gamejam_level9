@@ -35,7 +35,7 @@ public class CurseManager : MonoBehaviour, IService
         {
             existing.RemainingTime = Mathf.Max(existing.RemainingTime, duration);
 
-            LogSystem.Instance.AddLog($"Проклятие {existing.DisplayName} продлено на {duration} сек",
+            LogSystem.Instance.AddLog($"Проклятие {existing.DisplayName} продлено до {duration} сек",
                 Color.yellow, "⏰");
             
             return;
@@ -158,7 +158,7 @@ public class CurseManager : MonoBehaviour, IService
                     }
                 };
             
-            case "curse_of_greed": 
+            case "greed": 
                 return new Curse
                 {
                     CurseId = "greed",
