@@ -5,8 +5,8 @@ public class AudioManager : MonoBehaviour, IService
     private AudioSource _musicSource;
     private AudioSource _soundSource;
 
-    public float MusicVolume { get; private set; } = 0.25f;
-    public float SoundVolume { get; private set; } = 1f;
+    public float MusicVolume { get; private set; } = 0.4f;
+    public float SoundVolume { get; private set; } = 0.75f;
 
     private float _savedMusicTime = 0f;
 

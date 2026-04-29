@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class TrialSystem : MonoBehaviour, IService
 {
@@ -15,25 +14,13 @@ public class TrialSystem : MonoBehaviour, IService
 
         if (Random.value > chance)
         {
-            LogSystem.Instance.AddLog("Тотем принял жертву без испытания.", Color.lightSeaGreen);
+            LogSystem.Instance.AddLog("Господин принял жертву без испытания.", Color.lightSeaGreen);
             return;
         }
 
         int enemyPower = GetEnemyPower(sacrificeCount);
         
-        TrialChoicePopup.Instance.Show(sacrificePower, enemyPower, resourceType, OnTrialChoice);
-    }
-
-    private void OnTrialChoice(bool accepted)
-    {
-        if (accepted)
-        {
-            LogSystem.Instance.AddLog("Ты принял вызов тотема!", Color.white);
-        }
-        else
-        {
-            LogSystem.Instance.AddLog("Ты отказался от испытания. Тотем разгневан!", Color.red);
-        }
+        TrialChoicePopup.Instance.Show(sacrificePower, enemyPower, resourceType);
     }
 
     public int GetEnemyPower(int sacrificeCount)

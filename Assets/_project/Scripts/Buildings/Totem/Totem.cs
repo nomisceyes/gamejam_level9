@@ -1,15 +1,20 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Totem : MonoBehaviour
 {
+    public Text SacrificeCountText;
+
     [Header("Balance Settings")] public float CurrentFavor = 50;
     public int MaxFavor = 100;
     public int MinFavorForWin = 100;
     public int MinFavorForLose = 0;
     public float FavorDecayRate = 0.5f;
 
+    public float PowerModifier;
+    public float FavorModifier;
     public int TotalSacrifices = 0;
     private int _maxSacrificesHistory = 3;
     private float _repetitionPenalty = 0.7f;
@@ -20,6 +25,9 @@ public class Totem : MonoBehaviour
     private Dictionary<ResourceType, int> _repetitionCount = new();
 
     public event Action OnFavorChange;
+
+    private void Start() =>
+        SacrificeCountText.text = TotalSacrifices.ToString();
 
     private void Update()
     {
@@ -48,10 +56,10 @@ public class Totem : MonoBehaviour
         }
         else
         {
-            bool enoughResources = G.ResourceManager.SpendResource(sacrifice.Cost);
+            bool enoughResources = G.ResourceManager.SpendResource(sacrifice);
             if (enoughResources == false)
             {
-                Debug.Log("You don't have enough resources");
+                LogSystem.Instance.AddLog("У вас недостаточно ресурса", Color.red);
                 return;
             }
         }
@@ -66,7 +74,7 @@ public class Totem : MonoBehaviour
 
             LogSystem.Instance.AddLog(message, Color.yellow);
         }
-        
+
         if (G.CurseManager.IsCurseActive("thirst") && sacrifice.Type == ResourceType.Health)
         {
             int healthCost = 10;
@@ -84,50 +92,43 @@ public class Totem : MonoBehaviour
 
             OnFavorChange?.Invoke();
             G.CurseManager.RemoveCurseByName("thirst");
-
-            // if (Health.Instance.CurrentHealth >= healthCost)
-            // {
-            //     Health.Instance.TakeDamage(healthCost);
-            //     LogSystem.Instance.AddLog($"Ты утолил жажду Господина своей кровью! -{healthCost} HP", Color.green);
-            // }
-            // else
-            // {
-            //     CurrentFavor -= 15;
-            //     LogSystem.Instance.AddLog($"Жажда Господина не утолена! Тебе не хватило здоровья! -15 благосклонности", Color.red);
-            //     OnFavorChange?.Invoke();
-            // }
-            //
-            // G.CurseManager.RemoveCurseByName("thirst");
-            // return;
         }
-        else if(G.CurseManager.IsCurseActive("thirst") && sacrifice.Type != ResourceType.Health)
+        else if (G.CurseManager.IsCurseActive("thirst") && sacrifice.Type != ResourceType.Health)
         {
             CurrentFavor -= 15;
             OnFavorChange?.Invoke();
             G.CurseManager.RemoveCurseByName("thirst");
         }
 
+        float sacrificeCountModifier = 1f + (TotalSacrifices * 0.05f);
+        sacrificeCountModifier = Mathf.Min(sacrificeCountModifier, 3f);
 
-        float powerModifier = G.CurseManager.GetModifier("sacrifice_power");
-        int finalPower = Mathf.FloorToInt(sacrifice.BasePower * powerModifier);
+        PowerModifier = G.CurseManager.GetModifier("sacrifice_power") * sacrificeCountModifier;
+        int finalPower = Mathf.FloorToInt(sacrifice.BasePower * PowerModifier);
 
         if (G.CurseManager.IsCurseActive("greed"))
         {
             G.ResourceManager.RemoveResource(ResourceType.Gold, 15);
         }
 
-        float favorModifier = G.CurseManager.GetModifier("favor_gain") * repetitionModifier;
+        FavorModifier = G.CurseManager.GetModifier("favor_gain") * repetitionModifier;
 
         if (G.CurseManager.IsCurseActive("eye"))
-            favorModifier *= 0.5f;
+            FavorModifier *= 0.5f;
 
-        int finalFavorChange = Mathf.FloorToInt(sacrifice.FavorChange * favorModifier);
+        int finalFavorChange = Mathf.FloorToInt(sacrifice.FavorChange * FavorModifier);
         CurrentFavor = Mathf.Clamp(CurrentFavor + finalFavorChange, 0, MaxFavor);
         OnFavorChange?.Invoke();
 
-        AddSacrificeToHistory(sacrifice.Type);
         TotalSacrifices++;
-        G.TrialSystem.StartTrial(finalPower, sacrifice.Type);
+        SacrificeCountText.text = TotalSacrifices.ToString();
+
+        if (sacrifice.Type != ResourceType.Health)
+        {
+            AddSacrificeToHistory(sacrifice.Type);
+            G.TrialSystem.StartTrial(finalPower, sacrifice.Type);
+        }
+
         LogSystem.Instance.LogSacrifice(sacrifice.Name, CurrentFavor - oldFavor);
         LogSystem.Instance.LogFavorChange(oldFavor, CurrentFavor);
     }
@@ -178,7 +179,7 @@ public class Totem : MonoBehaviour
         CurrentFavor -= amount;
         OnFavorChange?.Invoke();
     }
-    
+
     public void UpdateUI() =>
         OnFavorChange?.Invoke();
 }

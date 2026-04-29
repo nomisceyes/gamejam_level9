@@ -30,7 +30,7 @@ public class LogSystem : MonoBehaviour
     
     private void Start()
     {
-        AddLog("Добро пожаловать. Тотем ждёт твоих жертв...", _neutralColor);
+        AddLog("Добро пожаловать. Господин ждёт твоих жертв...", _neutralColor);
     }
     
     public void AddLog(string message, Color color)
@@ -96,9 +96,9 @@ public class LogSystem : MonoBehaviour
     {
         float delta = newFavor - oldFavor;
         if (delta > 0)
-            AddLog($"Благосклонность Господин повысилась до {newFavor} (+{delta})", _positiveColor);
+            AddLog($"Благосклонность Господина повысилась до {newFavor} (+{delta})", _positiveColor);
         else if (delta < 0)
-            AddLog($"Благосклонность Господин упала до {newFavor} ({delta})", _negativeColor);
+            AddLog($"Благосклонность Господина упала до {newFavor} ({delta})", _negativeColor);
     }
     
     public void LogGameEnd(bool isWin)
@@ -110,9 +110,9 @@ public class LogSystem : MonoBehaviour
         }
 
         if (isWin)
-            AddLog("Тотем ликует! Ты достиг просветления. ПОБЕДА!", _positiveColor);
+            AddLog("Господин ликует! Ты достиг просветления. ПОБЕДА!", _positiveColor);
         else
-            AddLog("Тотем уничтожил деревню. Ты не смог его умилостивить. ПОРАЖЕНИЕ!", _negativeColor);
+            AddLog("Господин уничтожил деревню. Ты не смог его умилостивить. ПОРАЖЕНИЕ!", _negativeColor);
     }
     
     private IEnumerator AutoScroll()

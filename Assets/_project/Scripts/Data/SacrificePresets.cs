@@ -2,37 +2,38 @@
 {
     public static readonly SacrificeData Food = new()
     {
-        Name = "Food",
+        Name = "Еда",
         Type = ResourceType.Food,
         BasePower = 10,
         FavorChange = 5,
-        Cost = new[] { new ResourceCost {Type = ResourceType.Food, Amount = 8}}
+        Amount = 8,
     };
 
     public static readonly SacrificeData Gold = new()
     {
-        Name = "Gold",
+        Name = "Золото",
         Type = ResourceType.Gold,
         BasePower = 15,
         FavorChange = 7,
-        Cost = new[] { new ResourceCost { Type = ResourceType.Gold, Amount = 10 } }
+        Amount = 10,
     };
     
     public static readonly SacrificeData Blood = new()
     {
-        Name = "Blood",
+        Name = "Кровь послушников",
         Type = ResourceType.Blood,
         BasePower = 35,
-        FavorChange = 10,
-        Cost = new[] { new ResourceCost {Type = ResourceType.Blood, Amount = 10} }
+        FavorChange = 8,
+        Amount = 10,
     };
     
     public static readonly SacrificeData HealthSacrifice = new()
     {
         Name = "Собственная кровь",
         Type = ResourceType.Health,
-        BasePower = 40,      // Сильная жертва
-        FavorChange = 15,
+        BasePower = 40,
+        FavorChange = 12,
+        Amount = 0,
         HealthCost = 10,
     };
 }

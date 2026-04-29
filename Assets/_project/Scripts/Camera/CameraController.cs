@@ -3,9 +3,10 @@ using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
+    public Texture2D CursorTexture;
     public float MoveSpeed = 5f;
-    public Vector2 MoveBoundsMin = new Vector2(-10f, -10f);
-    public Vector2 MoveBoundsMax = new Vector2(10f, 10f);
+    public Vector2 MoveBoundsMin = new (-10f, -10f);
+    public Vector2 MoveBoundsMax = new (10f, 10f);
 
     private Vector2 _moveInput;
 
@@ -13,6 +14,8 @@ public class CameraController : MonoBehaviour
     {
         G.Game.InputSystem.Player.Move.performed += OnMove;
         G.Game.InputSystem.Player.Move.canceled += OnMove;
+        
+        Cursor.SetCursor(CursorTexture, Vector2.zero, CursorMode.Auto);
     }
 
     private void Update()

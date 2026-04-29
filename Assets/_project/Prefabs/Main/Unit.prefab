@@ -175,8 +175,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Unit
   Name: "\u041F\u043E\u0441\u043B\u0443\u0448\u043D\u0438\u043A"
-  BloodValue: 7
-  FavorValue: 3
+  BloodValue: 5
+  FavorValue: 2
   SpriteRenderer: {fileID: 8136575645747106288}
   Animator: {fileID: 7713641011396231521}
   WalkSpeed: 2

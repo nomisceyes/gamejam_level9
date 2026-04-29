@@ -21,7 +21,6 @@ public class TrialChoicePopup : MonoBehaviour
     private int _currentSacrificePower;
     private int _currentEnemyPower;
     private ResourceType _currentSacrificeType;
-    private Action<bool> _onChoiceMade; 
     
     private void Awake()
     {
@@ -39,15 +38,15 @@ public class TrialChoicePopup : MonoBehaviour
             RefuseButton.onClick.AddListener(RefuseTrial);
     }
     
-    public void Show(int sacrificePower, int enemyPower, ResourceType type, System.Action<bool> callback)
+    public void Show(int sacrificePower, int enemyPower, ResourceType type)
     {
         G.Game.PausedGame();
         G.AudioManager.PlaySound(R.Audio.EvilLaughSound);
+        Time.timeScale = 0;
         
         _currentSacrificePower = sacrificePower;
         _currentEnemyPower = enemyPower;
         _currentSacrificeType = type;
-        _onChoiceMade = callback;
         
         float winChance = CalculateWinChance(sacrificePower, enemyPower);
         int winChancePercent = Mathf.RoundToInt(winChance * 100);
@@ -76,7 +75,6 @@ public class TrialChoicePopup : MonoBehaviour
         float winChance = CalculateWinChance(_currentSacrificePower, _currentEnemyPower);
         bool success = Random.value < winChance;
         
-        _onChoiceMade?.Invoke(true);
         ShowTrialResult(success);
     }
     
@@ -86,8 +84,6 @@ public class TrialChoicePopup : MonoBehaviour
         G.Game.UnPausedGame();
         
         ApplyRefusalPenalty();
-        
-        _onChoiceMade?.Invoke(false);
         
         LogSystem.Instance.AddLog("Ты отказался от испытания! Господин гневается и желает твоей крови!", Color.red);
         G.ResourceManager.RemoveResource(ResourceType.Blood, 15);
@@ -101,15 +97,13 @@ public class TrialChoicePopup : MonoBehaviour
         if (success)
         {
             ApplyVictoryReward();
-            LogSystem.Instance.AddLog($"ПОБЕДА в испытании! +{GetRewardText(_currentSacrificeType)} {GetResourceName(_currentSacrificeType)}", 
-                                       Color.green);
+            LogSystem.Instance.AddLog($"ПОБЕДА в испытании! +{GetRewardText(_currentSacrificeType)} {GetResourceName(_currentSacrificeType)}", Color.green);
         }
         else
         {
             string curseId = GetRandomCurse();
             ApplyDefeatPenalty(curseId);
-            LogSystem.Instance.AddLog($"ПОРАЖЕНИЕ в испытании! {GetDefeatPenaltyText(_currentSacrificeType, curseId)}", 
-                                       Color.red);
+            LogSystem.Instance.AddLog($"ПОРАЖЕНИЕ в испытании! {GetDefeatPenaltyText(_currentSacrificeType, curseId)}", Color.red);
         }
     }
     
@@ -120,6 +114,8 @@ public class TrialChoicePopup : MonoBehaviour
     
     private void ApplyVictoryReward()
     {
+        Time.timeScale = 1;
+        
         switch (_currentSacrificeType)
         {
             case ResourceType.Food:
@@ -141,6 +137,8 @@ public class TrialChoicePopup : MonoBehaviour
     
     private void ApplyDefeatPenalty(string curseId)
     {
+        Time.timeScale = 1;
+        
         switch (_currentSacrificeType)
         {
             case ResourceType.Food:
@@ -155,12 +153,14 @@ public class TrialChoicePopup : MonoBehaviour
         }
        
         G.AudioManager.PlaySound(R.Audio.EvilRoarSound);
-        G.CurseManager.ApplyCurse(curseId, 40f);
+        G.CurseManager.ApplyCurse(curseId, 30f);
         G.Game.Totem.FavorDecrease(10);
     }
     
     private void ApplyRefusalPenalty()
     {
+        Time.timeScale = 1;
+        
         switch (_currentSacrificeType)
         {
             case ResourceType.Food:
@@ -241,12 +241,4 @@ public class TrialChoicePopup : MonoBehaviour
         
         return curces[randomCurse];
     }
-    
-    // private string GetRandomCurse()
-    // {
-    //     string[] curces = { "thirst"};
-    //     int randomCurse = Random.Range(0, curces.Length);
-    //     
-    //     return curces[randomCurse];
-    // }
 }

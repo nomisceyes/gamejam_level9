@@ -32,19 +32,13 @@ public class ResourceManager : MonoBehaviour, IService
         OnResourceChanged?.Invoke(type);
     }
 
-    public bool SpendResource(ResourceCost[] costs)
+    public bool SpendResource(SacrificeData data)
     {
-        foreach (var cost in costs)
-        {
-            if (GetResource(cost.Type) < cost.Amount)
-                return false;
-        }
-
-        foreach (var cost in costs)
-        {
-            Resources[cost.Type] = Mathf.Max(0, Resources[cost.Type] - cost.Amount);
-            OnResourceChanged?.Invoke(cost.Type);
-        }
+        if (GetResource(data.Type) < data.Amount)
+            return false;
+        
+        Resources[data.Type] = Mathf.Max(0, Resources[data.Type] - data.Amount);
+        OnResourceChanged?.Invoke(data.Type);
 
         return true;
     }

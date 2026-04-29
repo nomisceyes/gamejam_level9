@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {
+    public GameObject NoobPanel;
+    
     public Totem Totem;
     private bool _isStop = false;
 
@@ -32,6 +34,7 @@ public class Game : MonoBehaviour
             Totem = FindFirstObjectByType<Totem>();
 
         G.AudioManager.PlayMusic(R.Audio.BackgroundMusic);
+        NoobPanel.SetActive(true);
     }
 
     private void Update()
@@ -86,5 +89,10 @@ public class Game : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         G.ResourceManager.ResetResource();
+    }
+
+    public void CloseNoobPanel()
+    {
+        NoobPanel.SetActive(false);
     }
 }

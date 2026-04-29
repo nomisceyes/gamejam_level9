@@ -12,9 +12,9 @@ TagManager:
   - PostLayer
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Ground
+  - Details
+  - Unit
   - 
   - 
   - 
@@ -41,6 +41,15 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Unit
+    uniqueID: 1959995495
+    locked: 0
+  - name: Details
+    uniqueID: 467603579
+    locked: 0
+  - name: Glound
+    uniqueID: 2406979007
     locked: 0
   m_RenderingLayers:
   - Default

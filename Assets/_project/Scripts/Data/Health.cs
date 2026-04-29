@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,10 +11,6 @@ public class Health : MonoBehaviour
     
     public Image HealthSlider;
     public Text HealthText;
-    //public GameObject LowHealthWarning;
-    
-    public System.Action<int, int> OnHealthChanged;
-    public System.Action OnPlayerDeath;
     
     private void Awake()
     {
@@ -35,26 +32,6 @@ public class Health : MonoBehaviour
         
         CurrentHealth = Mathf.Max(0, CurrentHealth - amount);
         UpdateUI(); 
-        
-        Debug.Log($"❤️ Получено урона: {amount}. Здоровье: {CurrentHealth}/{MaxHealth}");
-        
-        if (CurrentHealth <= 0)
-        {
-            OnPlayerDeath?.Invoke();
-           // Die();
-        }
-    }
-    
-    public void Heal(int amount)
-    {
-        CurrentHealth = Mathf.Min(MaxHealth, CurrentHealth + amount);
-        UpdateUI();
-        Debug.Log($"💚 Восстановлено: {amount}. Здоровье: {CurrentHealth}/{MaxHealth}");
-    }
-    
-    public bool HasEnoughHealth(int requiredAmount)
-    {
-        return CurrentHealth >= requiredAmount;
     }
     
     private void UpdateUI()
@@ -64,17 +41,5 @@ public class Health : MonoBehaviour
         
         if (HealthText != null)
             HealthText.text = $"{CurrentHealth}/{MaxHealth}";
-        
-        // if (LowHealthWarning != null)
-        //     LowHealthWarning.SetActive(CurrentHealth <= MaxHealth * 0.3f);
-        
-        OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
     }
-
-    // private void Die()
-    // {
-    //     Debug.Log("💀 Игрок умер! Деревня пала...");
-    //     // Здесь можно вызвать поражение
-    //     G.Game.WinLoseCondition();
-    // }
 }
