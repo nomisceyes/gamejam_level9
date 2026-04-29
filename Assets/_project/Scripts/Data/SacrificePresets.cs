@@ -4,8 +4,8 @@
     {
         Name = "Еда",
         Type = ResourceType.Food,
-        BasePower = 10,
-        FavorChange = 5,
+        BasePower = 15,
+        FavorChange = 3,
         Amount = 8,
     };
 
@@ -13,8 +13,8 @@
     {
         Name = "Золото",
         Type = ResourceType.Gold,
-        BasePower = 15,
-        FavorChange = 7,
+        BasePower = 23,
+        FavorChange = 5,
         Amount = 10,
     };
     
@@ -22,8 +22,8 @@
     {
         Name = "Кровь послушников",
         Type = ResourceType.Blood,
-        BasePower = 35,
-        FavorChange = 8,
+        BasePower = 25,
+        FavorChange = 6,
         Amount = 10,
     };
     
@@ -31,8 +31,8 @@
     {
         Name = "Собственная кровь",
         Type = ResourceType.Health,
-        BasePower = 40,
-        FavorChange = 12,
+        BasePower = 35,
+        FavorChange = 10,
         Amount = 0,
         HealthCost = 10,
     };
