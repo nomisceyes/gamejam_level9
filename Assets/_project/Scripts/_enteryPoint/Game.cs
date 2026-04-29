@@ -35,6 +35,7 @@ public class Game : MonoBehaviour
 
         G.AudioManager.PlayMusic(R.Audio.BackgroundMusic);
         NoobPanel.SetActive(true);
+        Time.timeScale = 1;
     }
 
     private void Update()
@@ -54,12 +55,14 @@ public class Game : MonoBehaviour
             ResoultHandler.Instance.ShowResoult(false);
             G.AudioManager.PlaySound(R.Audio.LoseSound);
             _isStop = true;
+            Time.timeScale = 0;
         }
         else if (Totem.CurrentFavor >= Totem.MinFavorForWin && Health.Instance.CurrentHealth > 0)
         {
             LogSystem.Instance.LogGameEnd(true);
             ResoultHandler.Instance.ShowResoult(true);
             _isStop = true;
+            Time.timeScale = 0;
         }
     }
 
