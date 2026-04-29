@@ -59,7 +59,7 @@ public class SacrificeTooltip : MonoBehaviour
 
     public void PositionTooltip(Vector3 position)
     {
-        TooltipPanel.GetComponent<RectTransform>().position = new Vector3(position.x, position.y + 300, 0);
+        TooltipPanel.GetComponent<RectTransform>().position = new Vector3(position.x, position.y + 100, 0);
     }
 
     public void ShowTooltip()
