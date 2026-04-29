@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Unit : MonoBehaviour
@@ -8,10 +9,10 @@ public class Unit : MonoBehaviour
 
     public SpriteRenderer SpriteRenderer;
     public Animator Animator;
-    
+
     public float WalkSpeed = 3f;
     public Vector2[] Waypoints;
-    
+
     private BoxCollider2D _collider;
     private Vector3 _lastPosition;
     private Color _originalColor;
@@ -25,7 +26,7 @@ public class Unit : MonoBehaviour
 
         if (Waypoints == null || Waypoints.Length == 0)
             GenerateRandomWaypoints();
-        
+
         Animator = GetComponent<Animator>();
     }
 
@@ -41,31 +42,24 @@ public class Unit : MonoBehaviour
     private void UpdateFacingDirection()
     {
         if (transform.localPosition.x > Waypoints[_currentWaypoint].x)
-        {
             SpriteRenderer.flipX = true;
-        }
         else
-        {
             SpriteRenderer.flipX = false;
-        }
     }
 
     public void OnGrabbed()
     {
         IsGrabbed = true;
-
-        if (_collider != null)
-            _collider.enabled = false;
+        _collider.enabled = false;
 
         SpriteRenderer.color = Color.yellow;
+        G.AudioManager.PlaySound(R.Audio.UnitGrabSound);
     }
 
     public void OnReleased()
     {
         IsGrabbed = false;
-
-        if (_collider != null)
-            _collider.enabled = true;
+        _collider.enabled = true;
 
         SpriteRenderer.color = _originalColor;
 
@@ -81,7 +75,7 @@ public class Unit : MonoBehaviour
 
         if (Vector3.Distance(transform.position, target) < 0.1f)
         {
-            _currentWaypoint = (_currentWaypoint + 1) % Waypoints.Length;
+            _currentWaypoint = Random.Range(0, Waypoints.Length);
         }
     }
 
@@ -115,12 +109,17 @@ public class Unit : MonoBehaviour
         transform.position = nearest;
     }
 
-    public void Sacrifice()
+    public void Sacrifice() =>
+        StartCoroutine(SacrificeCoroutine());
+
+    private IEnumerator SacrificeCoroutine()
     {
         Animator.SetTrigger("Sacrifice");
-        UnitSpawner.Instance.UnitDie();
-        Destroy(gameObject, 0.6f);
-        
         G.AudioManager.PlaySound(R.Audio.UnitDieSound);
+
+        yield return new WaitForSeconds(0.6f);
+
+        UnitSpawner.Instance.UnitDie();
+        Destroy(gameObject);
     }
 }

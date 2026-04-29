@@ -5,10 +5,8 @@ public class Reticle : MonoBehaviour
     public static Reticle Instance;
 
     [Header("Визуал")] public GameObject reticleObject;
-    public Color normalColor = Color.white;
-    public Color grabbedColor = Color.yellow;
-
-    [Header("Настройки")] public float grabDistance = 3f; // Дистанция захвата юнита
+    public Color NormalColor = Color.white;
+    public Color GrabbedColor = Color.yellow;
 
     private Camera _mainCamera;
     private SpriteRenderer _reticleRenderer;
@@ -31,35 +29,24 @@ public class Reticle : MonoBehaviour
 
     private void Update()
     {
-        // Прицел всегда по центру экрана
         Vector3 centerPos = _mainCamera.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, 10));
         centerPos.z = 0;
         reticleObject.transform.position = centerPos;
 
         if (!_isGrabbing)
         {
-            // Проверяем, есть ли юнит под прицелом
             CheckForUnitUnderReticle();
 
-            // Захват по пробелу
             if (Input.GetKeyDown(KeyCode.Space))
-            {
                 TryGrabUnit();
-            }
         }
         else
         {
-            // Юнит следует за прицелом
             if (_grabbedUnit != null)
-            {
                 _grabbedUnit.transform.position = reticleObject.transform.position;
-            }
 
-            // Отпускание по пробелу
             if (Input.GetKeyDown(KeyCode.Space))
-            {
                 TryReleaseUnit();
-            }
         }
     }
 
@@ -69,13 +56,9 @@ public class Reticle : MonoBehaviour
         Collider2D hit = Physics2D.OverlapCircle(centerPos, 0.5f);
 
         if (hit != null && hit.GetComponent<Unit>() != null)
-        {
-            _reticleRenderer.color = grabbedColor;
-        }
+            _reticleRenderer.color = GrabbedColor;
         else
-        {
-            _reticleRenderer.color = normalColor;
-        }
+            _reticleRenderer.color = NormalColor;
     }
 
     private void TryGrabUnit()
@@ -91,8 +74,6 @@ public class Reticle : MonoBehaviour
                 _isGrabbing = true;
                 _grabbedUnit = unit;
                 _grabbedUnit.OnGrabbed();
-
-                Debug.Log($"Захвачен юнит: {_grabbedUnit.Name}");
             }
         }
     }
@@ -101,36 +82,31 @@ public class Reticle : MonoBehaviour
     {
         if (_grabbedUnit == null) return;
 
-        // Проверяем, попали ли на алтарь
         Vector3 centerPos = reticleObject.transform.position;
-        Collider2D hit = Physics2D.OverlapCircle(centerPos, 2f);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(centerPos, 2f);
 
         bool sacrificed = false;
 
-        if (hit != null)
+        foreach (Collider2D hit in hits)
         {
-            Debug.Log($"Hit: {hit.gameObject.name}"); 
-            
+            if (hit.gameObject == _grabbedUnit.gameObject)
+                continue;
+
             BloodAltar altar = hit.GetComponent<BloodAltar>();
             if (altar == null)
                 Debug.Log("Altar");
 
             if (altar != null)
             {
-                Debug.Log("Sacrifice");
                 altar.SacrificeUnit(_grabbedUnit);
                 sacrificed = true;
             }
         }
 
         if (!sacrificed)
-        {
             _grabbedUnit.OnReleased();
-        }
 
         _isGrabbing = false;
         _grabbedUnit = null;
-
-        Debug.Log(sacrificed ? "Юнит принесён в жертву!" : "Юнит отпущен");
     }
 }

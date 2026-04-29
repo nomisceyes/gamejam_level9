@@ -234,19 +234,19 @@ public class TrialChoicePopup : MonoBehaviour
         }
     }
 
-    // private string GetRandomCurse()
-    // {
-    //     string[] curces = { "rot" ,"eye","thirst","time_slow","greed"};
-    //     int randomCurse = Random.Range(0, curces.Length);
-    //     
-    //     return curces[randomCurse];
-    // }
-    
     private string GetRandomCurse()
     {
-        string[] curces = { "thirst"};
+        string[] curces = { "rot" ,"eye","thirst","time_slow","greed"};
         int randomCurse = Random.Range(0, curces.Length);
         
         return curces[randomCurse];
     }
+    
+    // private string GetRandomCurse()
+    // {
+    //     string[] curces = { "thirst"};
+    //     int randomCurse = Random.Range(0, curces.Length);
+    //     
+    //     return curces[randomCurse];
+    // }
 }

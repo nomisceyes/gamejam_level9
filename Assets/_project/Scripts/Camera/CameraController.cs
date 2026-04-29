@@ -15,7 +15,6 @@ public class CameraController : MonoBehaviour
         G.Game.InputSystem.Player.Move.canceled += OnMove;
     }
 
-
     private void Update()
     {
         Move();

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class UnitSpawner : MonoBehaviour
@@ -8,10 +9,11 @@ public class UnitSpawner : MonoBehaviour
     public GameObject UnitPrefab;
     public Transform[] SpawnPoints;
     public int MaxVillagers = 5;
-    public float SpawnDelay = 30f;
+    public float MinSpawnDelay = 10f;
+    public float MaxSpawnDelay = 25f;
     
     private int _currentVillagers = 0;
-    private float _spawnTimer = 0f;
+    private readonly List<Transform> _usedSpawnPoints = new ();
     
     private void Awake()
     {
@@ -23,22 +25,20 @@ public class UnitSpawner : MonoBehaviour
     
     private void Start()
     {
-        for (int i = 0; i < MaxVillagers; i++)
-        {
-            SpawnUnit();
-        }
+        StartCoroutine(SpawnLoop());
     }
     
-    private void Update()
+    private System.Collections.IEnumerator SpawnLoop()
     {
-        if (_currentVillagers < MaxVillagers)
+        while (true)
         {
-            _spawnTimer += Time.deltaTime;
-            if (_spawnTimer >= SpawnDelay)
+            while (_currentVillagers < MaxVillagers)
             {
-                _spawnTimer = 0f;
                 SpawnUnit();
+                float delay = Random.Range(MinSpawnDelay, MaxSpawnDelay);
+                yield return new WaitForSeconds(delay);
             }
+            yield return new WaitForSeconds(1f);
         }
     }
     
@@ -46,19 +46,32 @@ public class UnitSpawner : MonoBehaviour
     {
         if (_currentVillagers >= MaxVillagers) return;
         
-        Transform spawnPoint = GetRandomSpawnPoint();
+        Transform spawnPoint = GetRandomUnusedSpawnPoint();
+        if (spawnPoint == null)
+        {
+            spawnPoint = SpawnPoints[Random.Range(0, SpawnPoints.Length)];
+        }
+        
         if (spawnPoint == null) return;
         
         GameObject newUnit = Instantiate(UnitPrefab, spawnPoint.position, Quaternion.identity);
         _currentVillagers++;
     }
     
-    private Transform GetRandomSpawnPoint()
+    private Transform GetRandomUnusedSpawnPoint()
     {
-        if (SpawnPoints == null || SpawnPoints.Length == 0)
-            return null;
+        if (SpawnPoints.Length == 0) return null;
         
-        return SpawnPoints[Random.Range(0, SpawnPoints.Length)];
+        List<Transform> freePoints = new List<Transform>();
+        foreach (Transform point in SpawnPoints)
+        {
+            if (!_usedSpawnPoints.Contains(point))
+                freePoints.Add(point);
+        }
+        
+        if (freePoints.Count == 0) return null;
+        
+        return freePoints[Random.Range(0, freePoints.Count)];
     }
     
     public void UnitDie()

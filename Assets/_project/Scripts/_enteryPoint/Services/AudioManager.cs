@@ -71,7 +71,6 @@ public class AudioManager : MonoBehaviour, IService
 
         audioSource.clip = clip;
         audioSource.volume = SoundVolume;
-        //audioSource.pitch = 1f + addedPitch;
         audioSource.Play();
 
         Destroy(tempAudioObject, (clip.length / audioSource.pitch) + 0.1f);

@@ -11,6 +11,7 @@ public static class R
         public static AudioClip EvilLaughSound;
         public static AudioClip EvilRoarSound;
         public static AudioClip LoseSound;
+        public static AudioClip UnitGrabSound;
     }
 
     public static void InitAudio()
@@ -22,5 +23,6 @@ public static class R
         Audio.EvilLaughSound = Resources.Load<AudioClip>("Audio/SFX/EvilLaugh");
         Audio.EvilRoarSound = Resources.Load<AudioClip>("Audio/SFX/EvilRoar");
         Audio.LoseSound = Resources.Load<AudioClip>("Audio/SFX/Lose");
+        Audio.UnitGrabSound = Resources.Load<AudioClip>("Audio/SFX/GrabUnit");
     }
 }

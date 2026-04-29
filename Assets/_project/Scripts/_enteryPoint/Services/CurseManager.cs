@@ -142,7 +142,7 @@ public class CurseManager : MonoBehaviour, IService
                     CurseId = "thirst",
                     DisplayName = "Жажда крови",
                     Icon = icon,
-                    Description = "Необходимо пожертвовать кровь, иначе будет наложен штраф.",
+                    Description = "Необходимо пожертвовать своим здоровьем, иначе будет наложен штраф.",
                     Effects = new List<CurseEffect>(),
                 };
 
