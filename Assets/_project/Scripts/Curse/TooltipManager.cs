@@ -84,7 +84,7 @@ public class TooltipManager : MonoBehaviour, IService
         Vector3 iconWorldPos = targetIcon.position;
         Vector2 iconScreenPos = RectTransformUtility.WorldToScreenPoint(null, iconWorldPos);
         
-        TooltipPanel.transform.position = iconScreenPos + new Vector2(targetIcon.rect.width + 200f, -140f);
+        TooltipPanel.transform.position = iconScreenPos + new Vector2(targetIcon.rect.width, -100f);
     }
 
     public void HideTooltip()

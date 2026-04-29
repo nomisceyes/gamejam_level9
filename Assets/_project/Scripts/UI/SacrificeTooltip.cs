@@ -57,9 +57,13 @@ public class SacrificeTooltip : MonoBehaviour
         return Mathf.FloorToInt(data.FavorChange * favorModifier);
     }
 
-    public void PositionTooltip(Vector3 position)
+    public void PositionTooltip(RectTransform targetIcon)
     {
-        TooltipPanel.GetComponent<RectTransform>().position = new Vector3(position.x, position.y + 100, 0);
+        Vector3 iconWorldPos = targetIcon.position;
+        Vector2 iconScreenPos = RectTransformUtility.WorldToScreenPoint(null, iconWorldPos);
+        
+        TooltipPanel.transform.position = iconScreenPos + new Vector2(0, 150);
+        //TooltipPanel.GetComponent<RectTransform>().position = new Vector3(position.x, position.y + 100, 0);
     }
 
     public void ShowTooltip()

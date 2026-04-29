@@ -6,6 +6,7 @@ public class CurseUI : MonoBehaviour
 {
     public Transform CurseContainer;
     public GameObject CursePrefab;
+    public Text TimeText;
 
     private Dictionary<string, GameObject> CurseIcons = new();
 
@@ -23,8 +24,9 @@ public class CurseUI : MonoBehaviour
             {
                 if (CurseIcons.ContainsKey(curse.CurseId))
                 {
-                    Text text = CurseIcons[curse.CurseId].GetComponentInChildren<Text>();
-                    text.text = $"{curse.DisplayName}\n{curse.RemainingTime:F0}c";
+                    TimeText = CurseIcons[curse.CurseId].GetComponentInChildren<Text>();
+                    //NameText.text = $"{curse.DisplayName}";
+                    TimeText.text = $"{curse.RemainingTime:F0}c";
                 }
             }
         }
