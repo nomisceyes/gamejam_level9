@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Unit : MonoBehaviour
 {
@@ -18,6 +20,8 @@ public class Unit : MonoBehaviour
     private Color _originalColor;
     private int _currentWaypoint = 0;
     public bool IsGrabbed = false;
+    
+    private Vector2 _startPosition;
 
     private void Start()
     {
@@ -56,7 +60,7 @@ public class Unit : MonoBehaviour
         G.AudioManager.PlaySound(R.Audio.UnitGrabSound);
     }
 
-    public void OnReleased()
+    public void ReturnUnit()
     {
         IsGrabbed = false;
         _collider.enabled = true;

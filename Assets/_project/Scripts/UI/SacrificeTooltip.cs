@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class SacrificeTooltip : MonoBehaviour
@@ -12,12 +11,15 @@ public class SacrificeTooltip : MonoBehaviour
     public Text FavorText;
     public Text CostText;
 
+    private RectTransform _tooltipRectTransform;
+    
     private void Awake()
     {
         if (Instance == null)
             Instance = this;
 
         TooltipPanel.SetActive(false);
+        _tooltipRectTransform = TooltipPanel.GetComponent<RectTransform>();
     }
 
     public void UpdateTooltip(SacrificeData data)
@@ -57,13 +59,13 @@ public class SacrificeTooltip : MonoBehaviour
         return Mathf.FloorToInt(data.FavorChange * favorModifier);
     }
 
-    public void PositionTooltip(RectTransform targetIcon)
+    public void PositionTooltip(Vector2 targetIcon)
     {
-        Vector3 iconWorldPos = targetIcon.position;
-        Vector2 iconScreenPos = RectTransformUtility.WorldToScreenPoint(null, iconWorldPos);
+        TooltipPanel.transform.position = targetIcon;
         
-        TooltipPanel.transform.position = iconScreenPos + new Vector2(0, 150);
-        //TooltipPanel.GetComponent<RectTransform>().position = new Vector3(position.x, position.y + 100, 0);
+        _tooltipRectTransform.anchoredPosition = new Vector2(
+            _tooltipRectTransform.anchoredPosition.x,
+            _tooltipRectTransform.anchoredPosition.y + 250);
     }
 
     public void ShowTooltip()

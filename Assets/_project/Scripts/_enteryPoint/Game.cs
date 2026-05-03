@@ -34,7 +34,7 @@ public class Game : MonoBehaviour
             Totem = FindFirstObjectByType<Totem>();
 
         G.AudioManager.PlayMusic(R.Audio.BackgroundMusic);
-        NoobPanel.SetActive(true);
+        //NoobPanel.SetActive(true);
         Time.timeScale = 1;
     }
 

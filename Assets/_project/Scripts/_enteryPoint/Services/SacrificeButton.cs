@@ -45,7 +45,7 @@ public class SacrificeButton : MonoBehaviour, IPointerEnterHandler, IPointerExit
         SacrificeTooltip.Instance.UpdateTooltip(Data);
         SacrificeTooltip.Instance.ShowTooltip();
         
-        SacrificeTooltip.Instance.PositionTooltip(GetComponent<RectTransform>());
+        SacrificeTooltip.Instance.PositionTooltip(transform.position);
     }
     
     public void OnPointerExit(PointerEventData eventData)
