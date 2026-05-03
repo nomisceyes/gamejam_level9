@@ -25,7 +25,6 @@ public class CurseUI : MonoBehaviour
                 if (CurseIcons.ContainsKey(curse.CurseId))
                 {
                     TimeText = CurseIcons[curse.CurseId].GetComponentInChildren<Text>();
-                    //NameText.text = $"{curse.DisplayName}";
                     TimeText.text = $"{curse.RemainingTime:F0}c";
                 }
             }

@@ -15,9 +15,9 @@ public class Bootstrapper : MonoBehaviour
         
         G.ResourceManager = CreateSimpleService<ResourceManager>();
         G.TrialSystem = CreateSimpleService<TrialSystem>();
-        G.CurseManager = CreateSimpleService<CurseManager>();
         G.AudioManager = CreateSimpleService<AudioManager>();
-        // G.TooltipManager = CreateSimpleService<TooltipManager>();
+        G.CurseManager = CreateSimpleService<CurseManager>();
+        G.TooltipManager = CreateSimpleService<TooltipManager>();
     }
 
     private static T CreateSimpleService<T>() where T : Component, IService

@@ -6,29 +6,23 @@ public class CurseItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 {
     public Curse CurseData;
     public Image IconImage;
-    
-    private RectTransform _rectTransform;
 
     public void Init(Curse curse)
     {
         CurseData = curse;
-        
+
         IconImage = GetComponent<Image>();
         IconImage.sprite = CurseData.Icon;
-        
-        _rectTransform = GetComponent<RectTransform>();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (CurseData != null)
-        {
-            TooltipManager.Instance.ShowTooltip(CurseData, _rectTransform);
-        }
+        G.TooltipManager.CurseTooltip.UpdateTooltip(CurseData);
+        G.TooltipManager.CurseTooltip.ShowTooltip(transform.position);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        TooltipManager.Instance.HideTooltip();
+        G.TooltipManager.CurseTooltip.HideTooltip();
     }
 }

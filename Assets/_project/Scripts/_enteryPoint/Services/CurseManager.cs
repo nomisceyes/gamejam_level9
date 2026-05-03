@@ -8,11 +8,12 @@ public class CurseManager : MonoBehaviour, IService
 
     public event Action<Curse> OnCurseAdded;
     public event Action<Curse> OnCurseExpired;
-
+    
     public void Init()
     {
+        
     }
-
+    
     private void Update()
     {
         if (_activeCurses.Count != 0)
@@ -61,7 +62,7 @@ public class CurseManager : MonoBehaviour, IService
 
     public void RemoveCurse(Curse curse)
     {
-        TooltipManager.Instance.HideTooltip();
+        G.TooltipManager.CurseTooltip.HideTooltip();
         _activeCurses.Remove(curse);
         OnCurseExpired?.Invoke(curse);
 

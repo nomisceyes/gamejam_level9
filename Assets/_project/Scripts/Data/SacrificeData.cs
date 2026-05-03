@@ -1,7 +1,7 @@
 ﻿using System;
 
-[System.Serializable]
-public class SacrificeData
+[Serializable]
+public class SacrificeData : ITooltip<SacrificeData>
 {
     public string Name;
     public ResourceType Type;

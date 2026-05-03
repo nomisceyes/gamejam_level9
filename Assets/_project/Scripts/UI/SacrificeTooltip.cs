@@ -1,28 +1,29 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SacrificeTooltip : MonoBehaviour
+public class SacrificeTooltip : Tooltip<SacrificeData>
 {
-    public static SacrificeTooltip Instance;
-
-    [Header("UI тултипа")] public GameObject TooltipPanel;
     public Text TitleText;
     public Text PowerText;
     public Text FavorText;
     public Text CostText;
 
-    private RectTransform _tooltipRectTransform;
-    
-    private void Awake()
+    public void Init(GameObject tooltip)
     {
-        if (Instance == null)
-            Instance = this;
-
+        TooltipPanel = tooltip;
         TooltipPanel.SetActive(false);
         _tooltipRectTransform = TooltipPanel.GetComponent<RectTransform>();
+        
+        TitleText = TooltipPanel.transform.Find("Title").GetComponent<Text>();
+        PowerText = TooltipPanel.transform.GetChild(1).GetComponent<Text>();
+        FavorText = TooltipPanel.transform.GetChild(2).GetComponent<Text>();
+        CostText = TooltipPanel.transform.GetChild(3).GetComponent<Text>();
+
+        offsetX = 0f;
+        offsetY = 230f;
     }
 
-    public void UpdateTooltip(SacrificeData data)
+    public override void UpdateTooltip(SacrificeData data)
     {
         if (data == null) return;
 
@@ -57,24 +58,5 @@ public class SacrificeTooltip : MonoBehaviour
     {
         float favorModifier = G.Game.Totem.FavorModifier;
         return Mathf.FloorToInt(data.FavorChange * favorModifier);
-    }
-
-    public void PositionTooltip(Vector2 targetIcon)
-    {
-        TooltipPanel.transform.position = targetIcon;
-        
-        _tooltipRectTransform.anchoredPosition = new Vector2(
-            _tooltipRectTransform.anchoredPosition.x,
-            _tooltipRectTransform.anchoredPosition.y + 250);
-    }
-
-    public void ShowTooltip()
-    {
-        TooltipPanel.SetActive(true);
-    }
-
-    public void HideTooltip()
-    {
-        TooltipPanel.SetActive(false);
     }
 }

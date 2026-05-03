@@ -5,5 +5,5 @@ public static class G
     public static TrialSystem TrialSystem;
     public static CurseManager CurseManager;
     public static AudioManager AudioManager;
-    //public static TooltipManager TooltipManager;
+    public static TooltipManager TooltipManager;
 }

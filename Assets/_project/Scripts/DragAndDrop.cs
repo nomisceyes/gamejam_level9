@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class DragAndDrop : MonoBehaviour
 {
@@ -7,11 +6,6 @@ public class DragAndDrop : MonoBehaviour
     private Unit _grabbedUnit;
     private Vector3 _mousePos;
     private bool _isGrabbing;
-
-    public DragAndDrop(bool isGrabbing)
-    {
-        _isGrabbing = isGrabbing;
-    }
 
     private void Start()
     {

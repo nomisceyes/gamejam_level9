@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class Curse
+public class Curse : ITooltip<Curse>
 {
     public string CurseId;
     public string DisplayName;
