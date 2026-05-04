@@ -1,37 +1,37 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class Unit : MonoBehaviour
 {
+    public Vector2[] Waypoints;
     public string Name = "Послушник";
     public int BloodValue = 10;
     public int FavorValue = 5;
-
-    public SpriteRenderer SpriteRenderer;
-    public Animator Animator;
-
     public float WalkSpeed = 3f;
-    public Vector2[] Waypoints;
-
+    public bool IsGrabbed;
+    
+    private SpriteRenderer _spriteRenderer;
+    private Animator _animator;
     private BoxCollider2D _collider;
-    private Vector3 _lastPosition;
+    private Vector2 _lastPosition;
+    private Vector2 _startPosition;
     private Color _originalColor;
     private int _currentWaypoint = 0;
-    public bool IsGrabbed = false;
-    
-    private Vector2 _startPosition;
 
+    private void Awake()
+    {
+        _collider = GetComponent<BoxCollider2D>();
+        _animator = GetComponent<Animator>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+    
     private void Start()
     {
-        _originalColor = SpriteRenderer.color;
-        _collider = GetComponent<BoxCollider2D>();
+        _originalColor = _spriteRenderer.color;
 
         if (Waypoints == null || Waypoints.Length == 0)
             GenerateRandomWaypoints();
-
-        Animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -46,9 +46,9 @@ public class Unit : MonoBehaviour
     private void UpdateFacingDirection()
     {
         if (transform.localPosition.x > Waypoints[_currentWaypoint].x)
-            SpriteRenderer.flipX = true;
+            _spriteRenderer.flipX = true;
         else
-            SpriteRenderer.flipX = false;
+            _spriteRenderer.flipX = false;
     }
 
     public void OnGrabbed()
@@ -56,7 +56,7 @@ public class Unit : MonoBehaviour
         IsGrabbed = true;
         _collider.enabled = false;
 
-        SpriteRenderer.color = Color.yellow;
+        _spriteRenderer.color = Color.yellow;
         G.AudioManager.PlaySound(R.Audio.UnitGrabSound);
     }
 
@@ -65,7 +65,7 @@ public class Unit : MonoBehaviour
         IsGrabbed = false;
         _collider.enabled = true;
 
-        SpriteRenderer.color = _originalColor;
+        _spriteRenderer.color = _originalColor;
 
         ReturnToNearestWaypoint();
     }
@@ -118,7 +118,7 @@ public class Unit : MonoBehaviour
 
     private IEnumerator SacrificeCoroutine()
     {
-        Animator.SetTrigger("Sacrifice");
+        _animator.SetTrigger("Sacrifice");
         G.AudioManager.PlaySound(R.Audio.UnitDieSound);
 
         yield return new WaitForSeconds(0.6f);

@@ -23,7 +23,7 @@ public class DragAndDrop : MonoBehaviour
 
             if (hit.collider != null && hit.collider.TryGetComponent(out Unit unit))
             {
-                TryGrabUnit(unit);
+                GrabUnit(unit);
             }
         }
         else if (Input.GetMouseButton(0))
@@ -38,18 +38,18 @@ public class DragAndDrop : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            TryReleaseUnit();
+            ReleaseUnit();
         }
     }
 
-    private void TryGrabUnit(Unit unit)
+    private void GrabUnit(Unit unit)
     {
         _isGrabbing = true;
         _grabbedUnit = unit;
         _grabbedUnit.OnGrabbed();
     }
     
-    private void TryReleaseUnit()
+    private void ReleaseUnit()
     {
         if (_grabbedUnit == null) return;
 

@@ -4,17 +4,19 @@ using UnityEngine;
 
 public class CurseManager : MonoBehaviour, IService
 {
-    private List<Curse> _activeCurses = new();
+    private readonly List<Curse> _activeCurses = new();
 
+    private ShakeEffect _shakeEffect;
+    
     public event Action<Curse> OnCurseAdded;
     public event Action<Curse> OnCurseExpired;
     
     public void Init()
     {
-        
+        _shakeEffect = FindFirstObjectByType<ShakeEffect>();
     }
     
-    private void Update()
+    private void Update() // Убрать в корутину?
     {
         if (_activeCurses.Count != 0)
         {
@@ -56,7 +58,7 @@ public class CurseManager : MonoBehaviour, IService
         _activeCurses.Add(newCurse);
         OnCurseAdded?.Invoke(newCurse);
 
-        ShakeEffect.Instance.PlayHorrorEffect();
+        _shakeEffect.PlayHorrorEffect();
         LogSystem.Instance.LogCurseApplied(newCurse.DisplayName, newCurse.Description, duration);
     }
 
